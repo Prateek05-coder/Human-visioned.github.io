@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VR Full-Body Anatomy &amp; Nerve Visualizer — Medical Diagnostic Suite</title>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #060b18;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   SECTION 1: COMPREHENSIVE PATIENT & NERVE DATABASE
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const PATIENT_DATA = {
+  patientName: "John A. Mercer",
+  patientId: "MRN-2026-04871",
+  age: 58,
+  sex: "Male",
+  scanDate: "2026-08-24",
+  organs: {
+
+    // ─────────────────── 1. BRAIN ───────────────────
+    brain: {
+      organName: "Brain",
+      anatomicalPart: "Left Temporal Lobe — Hippocampus",
+      disease: "Early-Onset Alzheimer's Disease",
+      severity: "MODERATE",
+      report:
+        "Volumetric MRI reveals bilateral hippocampal atrophy (Scheltens grade 3) " +
+        "with pronounced left temporal lobe volume loss. Amyloid-PET shows diffuse " +
+        "cortical uptake (Centiloid 42). CSF biomarkers confirm elevated phospho-tau " +
+        "(p-tau181: 78 pg/mL). Mini-Mental State Exam score is 22/30. Recommend " +
+        "cholinesterase inhibitor therapy and enrollment in clinical trial NCT-2026-ALZT.",
+      innervation: [
+        {
+          nerveName: "CN I — Olfactory Nerve",
+          branch: "Olfactory bulb → Olfactory tract → Piriform cortex",
+          type: "Sensory (Special)",
+          function: "Sense of smell; direct cortical projection without thalamic relay",
+          pathology: "Anosmia in early Alzheimer's; olfactory bulb atrophy correlates with disease progression"
+        },
+        {
+          nerveName: "CN II — Optic Nerve",
+          branch: "Retinal ganglion cells → Optic chiasm → Lateral geniculate nucleus → Visual cortex (V1)",
+          type: "Sensory (Special)",
+          function: "Visual signal transmission; pupillary light reflex afferent limb",
+          pathology: "Papilledema detected — elevated intracranial pressure; visual field testing shows early quadrantanopia"
+        },
+        {
+          nerveName: "CN III — Oculomotor Nerve",
+          branch: "Midbrain → Superior orbital fissure → Superior/Inferior divisions",
+          type: "Motor + Parasympathetic",
+          function: "Innervates superior, medial, inferior recti and inferior oblique; levator palpebrae superioris; pupil constriction via ciliary ganglion",
+          pathology: "Intact. No ptosis or pupillary dilation observed."
+        },
+        {
+          nerveName: "CN IV — Trochlear Nerve",
+          branch: "Dorsal midbrain → Superior orbital fissure → Superior oblique muscle",
+          type: "Motor",
+          function: "Innervates superior oblique; allows downward and inward eye movement (intorsion)",
+          pathology: "Intact. No vertical diplopia reported."
+        },
+        {
+          nerveName: "CN V — Trigeminal Nerve",
+          branch: "Pons → V1 (Ophthalmic), V2 (Maxillary), V3 (Mandibular)",
+          type: "Mixed (Sensory + Motor)",
+          function: "Facial sensation (all three divisions); mastication muscles (V3 motor root — masseter, temporalis, pterygoids)",
+          pathology: "Corneal reflex intact bilaterally. No sensory deficits in facial dermatomes."
+        },
+        {
+          nerveName: "CN VI — Abducens Nerve",
+          branch: "Pontomedullary junction → Cavernous sinus → Superior orbital fissure → Lateral rectus",
+          type: "Motor",
+          function: "Innervates lateral rectus muscle; enables eye abduction",
+          pathology: "Intact. No esotropia or lateral gaze palsy."
+        },
+        {
+          nerveName: "CN VII — Facial Nerve",
+          branch: "Pontine tegmentum → Internal acoustic meatus → Facial canal → Stylomastoid foramen → 5 terminal branches (Temporal, Zygomatic, Buccal, Marginal mandibular, Cervical)",
+          type: "Mixed (Motor + Sensory + Parasympathetic)",
+          function: "Facial expression muscles; taste anterior 2/3 tongue (chorda tympani); lacrimal and submandibular gland secretion",
+          pathology: "Mild facial asymmetry noted — reduced nasolabial fold depth on right. Possible early central facial weakness."
+        },
+        {
+          nerveName: "CN VIII — Vestibulocochlear Nerve",
+          branch: "Cochlear division (spiral ganglion) + Vestibular division (vestibular ganglion) → Internal acoustic meatus → Brainstem nuclei",
+          type: "Sensory (Special)",
+          function: "Cochlear: hearing (sound transduction from organ of Corti). Vestibular: balance and spatial orientation (semicircular canals, utricle, saccule)",
+          pathology: "Audiometry shows mild bilateral sensorineural hearing loss (high-frequency). Vestibular function grossly intact."
+        },
+        {
+          nerveName: "CN IX — Glossopharyngeal Nerve",
+          branch: "Medulla → Jugular foramen → Pharyngeal branches, Tonsillar, Lingual, Carotid sinus nerve",
+          type: "Mixed (Sensory + Motor + Parasympathetic)",
+          function: "Taste posterior 1/3 tongue; pharyngeal sensation; stylopharyngeus muscle; parotid gland secretion; carotid body/sinus baroreceptor/chemoreceptor",
+          pathology: "Gag reflex intact. Swallowing function normal."
+        },
+        {
+          nerveName: "CN X — Vagus Nerve",
+          branch: "Medulla → Jugular foramen → Pharyngeal, Superior laryngeal, Recurrent laryngeal, Cardiac, Pulmonary, Esophageal, Gastric branches",
+          type: "Mixed (Motor + Sensory + Parasympathetic)",
+          function: "Parasympathetic control of heart, lungs, and entire GI tract to splenic flexure. Laryngeal muscles (phonation). Taste from epiglottis. Visceral sensation.",
+          pathology: "Heart rate variability significantly reduced (SDNN: 68ms). Suggests early autonomic dysfunction consistent with neurodegenerative process."
+        },
+        {
+          nerveName: "CN XI — Accessory Nerve (Spinal)",
+          branch: "Spinal root (C1-C5 ventral rootlets) → Jugular foramen → Sternocleidomastoid and Trapezius muscles",
+          type: "Motor",
+          function: "Innervates sternocleidomastoid (head rotation) and trapezius (shoulder elevation/scapular rotation)",
+          pathology: "Intact. Trapezius and SCM strength 5/5 bilaterally."
+        },
+        {
+          nerveName: "CN XII — Hypoglossal Nerve",
+          branch: "Medulla (hypoglossal nucleus) → Hypoglossal canal → Intrinsic and extrinsic tongue muscles (genioglossus, hyoglossus, styloglossus)",
+          type: "Motor",
+          function: "All tongue movements — protrusion (genioglossus), retraction, side-to-side; essential for speech articulation and swallowing",
+          pathology: "Tongue protrudes midline. No fasciculations or atrophy. Dysarthria screening negative."
+        }
+      ]
+    },
+
+    // ─────────────────── 2. EYES ───────────────────
+    eyes: {
+      organName: "Eyes",
+      anatomicalPart: "Bilateral Globes — Retina & Optic Disc",
+      disease: "Early Papilledema (Bilateral)",
+      severity: "MODERATE",
+      report:
+        "Fundoscopic examination reveals bilateral optic disc swelling with blurred " +
+        "disc margins and peripapillary flame hemorrhages. OCT confirms retinal nerve " +
+        "fiber layer thickening (128µm OD, 135µm OS; normal <100µm). Visual acuity " +
+        "20/25 OU. No afferent pupillary defect. Elevated ICP suspected — correlate " +
+        "with neuroimaging. Lumbar puncture for opening pressure recommended.",
+      innervation: [
+        {
+          nerveName: "CN II — Optic Nerve",
+          branch: "Retinal ganglion cell axons → Optic disc → Optic nerve → Optic chiasm → Optic tract → LGN → Optic radiations → V1",
+          type: "Sensory (Special — Afferent)",
+          function: "Transmits visual information from 1.2 million retinal ganglion cells to primary visual cortex. Afferent limb of pupillary light reflex.",
+          pathology: "Swollen optic disc (papilledema) bilaterally. RNFL thickened on OCT. Risk of permanent visual field loss if ICP not managed."
+        },
+        {
+          nerveName: "CN III — Oculomotor Nerve",
+          branch: "Superior division → Superior rectus + Levator palpebrae. Inferior division → Medial rectus, Inferior rectus, Inferior oblique + Parasympathetic root to ciliary ganglion",
+          type: "Motor + Parasympathetic",
+          function: "Controls 4 of 6 extraocular muscles. Parasympathetic fibers via ciliary ganglion constrict pupil (sphincter pupillae) and accommodate lens (ciliary muscle).",
+          pathology: "Intact. No ptosis, pupil reactive 3mm→2mm bilaterally. Full extraocular movements."
+        },
+        {
+          nerveName: "CN IV — Trochlear Nerve",
+          branch: "Dorsal midbrain (only CN to exit dorsally) → Crosses midline → Superior orbital fissure → Superior oblique muscle",
+          type: "Motor",
+          function: "Innervates superior oblique muscle — depresses, abducts, and intorts the eye. Longest intracranial course of any CN.",
+          pathology: "Intact. No head tilt or vertical diplopia."
+        },
+        {
+          nerveName: "CN VI — Abducens Nerve",
+          branch: "Pontomedullary junction → Long intracranial course over petrous apex → Cavernous sinus → Superior orbital fissure → Lateral rectus",
+          type: "Motor",
+          function: "Innervates lateral rectus — abducts the eye. Longest intracranial subarachnoid course makes it vulnerable to raised ICP.",
+          pathology: "WATCH: CN VI is the most sensitive to raised ICP (false localizing sign). Currently intact but monitor closely given papilledema."
+        },
+        {
+          nerveName: "CN V₁ — Ophthalmic Division of Trigeminal",
+          branch: "Trigeminal ganglion → V1 → Frontal nerve (supraorbital, supratrochlear), Lacrimal nerve, Nasociliary nerve (long/short ciliary, ethmoidal)",
+          type: "Sensory",
+          function: "Sensation from cornea, upper eyelid, forehead, anterior scalp. Afferent limb of corneal reflex. Nasociliary → sensory to iris and ciliary body.",
+          pathology: "Corneal sensation intact bilaterally. Corneal reflex brisk."
+        }
+      ]
+    },
+
+    // ─────────────────── 3. HEART ───────────────────
+    heart: {
+      organName: "Heart",
+      anatomicalPart: "Left Ventricle — Anterior Wall",
+      disease: "Myocardial Infarction (STEMI)",
+      severity: "HIGH",
+      report:
+        "Imaging reveals a transmural infarction of the left ventricular anterior wall " +
+        "with estimated ejection fraction of 32%. Segmental wall-motion abnormality in " +
+        "LAD territory. Troponin-I peaked at 14.2 ng/mL. Immediate coronary angiography " +
+        "with possible PCI is strongly recommended. Initiate dual antiplatelet therapy " +
+        "and monitor for arrhythmias in the CCU.",
+      innervation: [
+        {
+          nerveName: "Vagus Nerve (CN X) — Cardiac Branches",
+          branch: "Superior cervical cardiac branch + Inferior cervical cardiac branch + Thoracic cardiac branches → Cardiac plexus (superficial & deep) → SA node, AV node, atrial myocardium",
+          type: "Parasympathetic",
+          function: "Decreases heart rate (negative chronotropy at SA node), slows AV conduction (negative dromotropy), reduces atrial contractility. Minimal direct ventricular effect.",
+          pathology: "Heart rate variability significantly reduced (SDNN: 52ms, critically low). Autonomic imbalance with sympathetic dominance post-MI increases arrhythmia risk."
+        },
+        {
+          nerveName: "Sympathetic Cardiac Nerves",
+          branch: "T1–T4 preganglionic → Sympathetic chain → Superior/Middle/Inferior cervical ganglia + T1–T4 thoracic ganglia → Postganglionic cardiac nerves → Cardiac plexus → SA node, AV node, ventricular myocardium, coronary arteries",
+          type: "Sympathetic",
+          function: "Increases heart rate (positive chronotropy), increases contractility (positive inotropy), increases conduction velocity (positive dromotropy), coronary vasodilation via β2 receptors.",
+          pathology: "Post-MI sympathetic hyperactivation detected. Elevated norepinephrine levels (892 pg/mL). Contributes to ventricular remodeling and arrhythmogenesis. Beta-blocker therapy indicated."
+        },
+        {
+          nerveName: "Phrenic Nerve (C3, C4, C5) — Pericardial Sensory",
+          branch: "C3-C5 ventral rami → Phrenic nerve → Pericardiacophrenic branch → Fibrous pericardium and mediastinal pleura",
+          type: "Sensory (Somatic Afferent)",
+          function: "Carries pain and proprioceptive sensation from the pericardium. Pericardial pain is referred to the left shoulder and neck via C3-C5 dermatomes (Kehr's sign equivalent).",
+          pathology: "Patient reports left shoulder pain consistent with pericardial irritation from transmural MI. Pericarditis risk to be monitored post-infarction (Dressler syndrome)."
+        }
+      ]
+    },
+
+    // ─────────────────── 4. LUNGS ───────────────────
+    lungs: {
+      organName: "Lungs",
+      anatomicalPart: "Right Lower Lobe — Posterior Basal Segment",
+      disease: "Pulmonary Fibrosis (UIP Pattern)",
+      severity: "MODERATE",
+      report:
+        "High-resolution CT demonstrates bilateral reticular opacities with honeycombing " +
+        "predominantly in the right lower lobe posterior basal segment, consistent with " +
+        "Usual Interstitial Pneumonia pattern. Forced Vital Capacity is 61% predicted. " +
+        "Pulmonary function trending downward over 6 months. Recommend antifibrotic " +
+        "therapy (nintedanib or pirfenidone) and referral for transplant evaluation.",
+      innervation: [
+        {
+          nerveName: "Vagus Nerve (CN X) — Pulmonary Plexus",
+          branch: "Vagus → Anterior and Posterior pulmonary plexus (at lung hilum) → Bronchial branches following bronchial tree → Terminal bronchioles",
+          type: "Parasympathetic + Sensory",
+          function: "Bronchoconstriction (smooth muscle contraction via M3 muscarinic receptors), increased mucus secretion from bronchial glands, pulmonary stretch receptor afferents (Hering-Breuer reflex), cough reflex afferent.",
+          pathology: "Cough reflex hyperactive — chronic dry cough characteristic of UIP. Vagal-mediated bronchoconstriction contributes to dyspnea. Pulmonary C-fiber activation from fibrotic irritation."
+        },
+        {
+          nerveName: "Sympathetic Pulmonary Nerves",
+          branch: "T2–T4 preganglionic → Sympathetic trunk → Pulmonary plexus → Bronchial smooth muscle and pulmonary vasculature",
+          type: "Sympathetic",
+          function: "Bronchodilation (β2 adrenergic receptors on bronchial smooth muscle), pulmonary vasoconstriction (α1 receptors), reduced mucus secretion. Modulates pulmonary vascular resistance.",
+          pathology: "Compensatory bronchodilation may be insufficient against fibrotic restriction. Sympathetically mediated pulmonary hypertension developing — RVSP 42 mmHg on echo."
+        },
+        {
+          nerveName: "Phrenic Nerve (C3–C5) — Diaphragmatic Pleura",
+          branch: "C3-C5 → Phrenic nerve → Pericardiacophrenic and Musculophrenic branches → Mediastinal and diaphragmatic parietal pleura",
+          type: "Sensory (Somatic Afferent)",
+          function: "Sensory innervation to central diaphragmatic pleura and mediastinal pleura. Pain referred to ipsilateral shoulder tip (C3-C5 dermatome). Distinct from intercostal innervation of costal pleura.",
+          pathology: "Right-sided pleuritic chest pain with shoulder referral consistent with phrenic nerve irritation from basal fibrotic changes adjacent to diaphragmatic pleura."
+        }
+      ]
+    },
+
+    // ─────────────────── 5. DIAPHRAGM ───────────────────
+    diaphragm: {
+      organName: "Diaphragm",
+      anatomicalPart: "Central Tendon & Muscular Dome",
+      disease: "Right Hemidiaphragm Eventration",
+      severity: "LOW",
+      report:
+        "Chest imaging demonstrates mild elevation of the right hemidiaphragm (2.5cm " +
+        "above expected). Fluoroscopic sniff test shows paradoxical motion of 1.8cm. " +
+        "Likely partial phrenic nerve dysfunction. FVC sitting 61% vs. supine 48% " +
+        "(>25% drop confirms diaphragmatic weakness). Pulmonary rehabilitation and " +
+        "nocturnal NIV assessment recommended.",
+      innervation: [
+        {
+          nerveName: "Phrenic Nerve (C3, C4, C5) — Motor",
+          branch: "C3-C5 ventral rami (primary from C4) → Merge at lateral border of anterior scalene → Descend through thorax anterior to lung hilum → Pericardiacophrenic artery accompaniment → Motor branches to muscular dome of diaphragm",
+          type: "Motor (Somatic Efferent) + Sensory",
+          function: "SOLE motor innervation of the diaphragm — responsible for ~70% of resting ventilation. 'C3, 4, 5 keeps the diaphragm alive.' Also sensory to central tendon, mediastinal pleura, pericardium, and peritoneum (inferior surface).",
+          pathology: "Right phrenic nerve partial conduction block (CMAP amplitude 0.3mV, normal >0.5mV). EMG of right hemidiaphragm shows reduced recruitment. Cause: possible compression by mediastinal fibrosis or cardiac enlargement."
+        },
+        {
+          nerveName: "Lower Intercostal Nerves (T5–T11)",
+          branch: "T5-T11 ventral rami → Intercostal course → Terminal branches pierce diaphragm peripherally → Innervate peripheral muscular rim of diaphragm (costal attachments)",
+          type: "Sensory (Somatic Afferent)",
+          function: "Sensory innervation to the peripheral (costal) portion of the diaphragm. Pain from peripheral diaphragmatic irritation is referred to the lower chest wall and upper abdomen (T5-T11 dermatomes), NOT to the shoulder.",
+          pathology: "Peripheral diaphragm sensation intact. Lower thoracic dermatome pain assessment normal. No evidence of intercostal nerve entrapment."
+        }
+      ]
+    },
+
+    // ─────────────────── 6. LIVER ───────────────────
+    liver: {
+      organName: "Liver",
+      anatomicalPart: "Right Hepatic Lobe — Segment VII",
+      disease: "Hepatocellular Carcinoma (Stage II)",
+      severity: "HIGH",
+      report:
+        "Contrast-enhanced MRI identifies a 3.8 cm arterially enhancing lesion in " +
+        "hepatic segment VII with washout on portal venous phase, meeting LI-RADS 5 " +
+        "criteria. AFP elevated at 420 ng/mL. No portal vein thrombosis or extrahepatic " +
+        "spread. Child-Pugh score A. Patient within Milan criteria. Recommend MDT " +
+        "review for surgical resection vs. transplant listing.",
+      innervation: [
+        {
+          nerveName: "Vagus Nerve (CN X) — Hepatic Branch",
+          branch: "Anterior vagal trunk (from left vagus) → Hepatic branch → Porta hepatis → Hepatic plexus → Along portal triad (hepatic artery, portal vein, bile duct) → Intrahepatic branches",
+          type: "Parasympathetic",
+          function: "Regulates hepatic glucose metabolism (enhances glycogen synthesis), modulates bile secretion, influences hepatic blood flow distribution. Vagal hepatic branch contains glucose-sensing afferents important for systemic glucose homeostasis.",
+          pathology: "Hepatic vagal tone assessment shows reduced glucose-sensing capacity. Postprandial glucose regulation impaired (HbA1c 6.4%). Vagal modulation of tumor microenvironment being investigated."
+        },
+        {
+          nerveName: "Sympathetic Hepatic Nerves (Greater Splanchnic, T7–T9)",
+          branch: "T7-T9 preganglionic → Greater splanchnic nerve → Celiac ganglion → Postganglionic fibers → Hepatic plexus (surrounding hepatic artery proper) → Periarterial innervation throughout liver parenchyma",
+          type: "Sympathetic",
+          function: "Hepatic vasoconstriction (reduces portal inflow), stimulates glycogenolysis and gluconeogenesis (raises blood glucose), modulates hepatic stellate cell activity, influences bile duct contractility.",
+          pathology: "Sympathetic hyperactivation detected — contributes to portal hypertension (HVPG 10 mmHg). Hepatic artery buffer response may be dysregulated near tumor. Stellate cell activation → fibrogenesis around tumor margin."
+        },
+        {
+          nerveName: "Right Phrenic Nerve — Hepatic Capsular Sensation",
+          branch: "C3-C5 → Right phrenic nerve → Sensory branches to hepatic peritoneum (Glisson's capsule) via phrenic-peritoneal reflections at bare area of liver",
+          type: "Sensory (Somatic Afferent)",
+          function: "Transmits pain from hepatic capsule distension or inflammation. Pain is classically referred to the right shoulder tip (C3-C5 dermatome) — critical clinical sign of hepatic or subphrenic pathology.",
+          pathology: "Patient reports intermittent right shoulder tip pain (Kehr's sign pattern) — consistent with capsular stretch from segment VII mass. Important differential from musculoskeletal shoulder pathology."
+        }
+      ]
+    },
+
+    // ─────────────────── 7. GALLBLADDER ───────────────────
+    gallbladder: {
+      organName: "Gallbladder",
+      anatomicalPart: "Fundus & Body — Cystic Duct Junction",
+      disease: "Acute Calculous Cholecystitis",
+      severity: "MODERATE",
+      report:
+        "Ultrasound reveals a distended gallbladder (11.2cm) with wall thickening " +
+        "(5.8mm), pericholecystic fluid, and positive sonographic Murphy's sign. A " +
+        "1.4cm calculus impacted at the cystic duct junction. CBD diameter 5mm (normal). " +
+        "WBC 14,200/µL with left shift. CRP 89 mg/L. Early laparoscopic cholecystectomy " +
+        "within 72 hours recommended per Tokyo Guidelines grade II.",
+      innervation: [
+        {
+          nerveName: "Vagus Nerve (CN X) — Parasympathetic",
+          branch: "Posterior vagal trunk → Celiac branch → Celiac plexus → Hepatic plexus → Cystic nerve plexus along cystic artery → Gallbladder wall",
+          type: "Parasympathetic",
+          function: "Stimulates gallbladder contraction (via CCK synergy on smooth muscle), promotes bile secretion and flow, relaxes sphincter of Oddi. Vagal tone maintains gallbladder motility during interdigestive periods.",
+          pathology: "Gallbladder contractility impaired — ejection fraction 22% on HIDA scan (normal >35%). Vagal-mediated contractile dysfunction may have predisposed to bile stasis and stone formation."
+        },
+        {
+          nerveName: "Right Phrenic Nerve — Referred Pain Pathway",
+          branch: "C3-C5 → Right phrenic nerve → Shared dermatome convergence with visceral afferents at C3-C5 spinal cord level → Referred pain to right shoulder and scapular tip",
+          type: "Sensory (Referred — Viscerosomatic Convergence)",
+          function: "Visceral pain from gallbladder inflammation travels via sympathetic afferents to T7-T9 spinal cord. Convergence with phrenic nerve somatic afferents at C3-C5 causes referred right shoulder pain (Collins' sign).",
+          pathology: "Classic right shoulder tip pain present — pathognomonic for gallbladder/subphrenic irritation. Pain intensity 6/10. Resolves with visceral analgesia, confirming referred origin."
+        },
+        {
+          nerveName: "Sympathetic Nerves — Celiac Plexus",
+          branch: "T7-T9 preganglionic → Greater splanchnic nerve → Celiac ganglion → Postganglionic fibers → Cystic nerve plexus (along cystic artery, within hepatoduodenal ligament)",
+          type: "Sympathetic + Visceral Afferent",
+          function: "Sympathetic efferents: gallbladder relaxation, sphincter of Oddi contraction, vasoconstriction. Visceral AFFERENTS: carry pain signals from gallbladder inflammation/distension to spinal cord (T7-T9) — these are the primary pain pathway.",
+          pathology: "Visceral afferent hyperactivation producing severe epigastric and RUQ pain. T7-T9 dermatome hyperalgesia present (cutaneous allodynia in RUQ). Indicates viscero-somatic sensitization."
+        }
+      ]
+    },
+
+    // ─────────────────── 8. STOMACH & DIGESTIVE ───────────────────
+    stomach: {
+      organName: "Stomach & Digestive System",
+      anatomicalPart: "Gastric Body — Lesser Curvature & Small Intestine",
+      disease: "Peptic Ulcer Disease (H. pylori +)",
+      severity: "MODERATE",
+      report:
+        "Upper GI endoscopy reveals a 1.2cm ulcer crater on the lesser curvature of the " +
+        "gastric body (Forrest IIc — flat pigmented spot). Rapid urease test (CLO) positive. " +
+        "H. pylori stool antigen confirmed. No evidence of malignancy on biopsy (Sydney " +
+        "classification: moderate chronic active gastritis). Initiate triple therapy " +
+        "(PPI + amoxicillin + clarithromycin × 14 days). Repeat endoscopy at 8 weeks.",
+      innervation: [
+        {
+          nerveName: "Vagus Nerve (CN X) — Gastric Branches",
+          branch: "Anterior vagal trunk (left vagus) → Anterior gastric branches (including 'Nerve of Latarjet' along lesser curvature) + Posterior vagal trunk (right vagus) → Posterior gastric branches + Celiac branch",
+          type: "Parasympathetic + Sensory",
+          function: "Stimulates gastric acid secretion (via ACh → parietal cells and G-cells), increases gastric motility and peristalsis, relaxes pyloric sphincter for gastric emptying. Nerve of Latarjet is critical for antral pump function.",
+          pathology: "Vagal hypertonicity contributes to acid hypersecretion in the ulcer zone. H. pylori disrupts the vagal-mucosal protective feedback. Selective vagotomy considerations if medical therapy fails."
+        },
+        {
+          nerveName: "Greater Splanchnic Nerve (T5–T9)",
+          branch: "T5-T9 preganglionic → Greater splanchnic nerve → Celiac ganglion → Postganglionic fibers → Gastric wall sympathetic plexus (along left and right gastric arteries)",
+          type: "Sympathetic + Visceral Afferent",
+          function: "Sympathetic: inhibits gastric motility and acid secretion, causes vasoconstriction (reduces mucosal blood flow). Afferent: carries visceral pain from gastric wall — epigastric pain referred to T5-T9 dermatomes.",
+          pathology: "Sympathetically mediated vasoconstriction reduces mucosal blood flow to ulcer bed, impairing healing. Visceral afferent pain pathway activated — patient reports burning epigastric pain 2-3 hours postprandial."
+        },
+        {
+          nerveName: "Enteric Nervous System (Myenteric & Submucosal Plexus)",
+          branch: "Myenteric plexus (Auerbach's — between longitudinal and circular muscle layers) + Submucosal plexus (Meissner's — in submucosa). 200-600 million neurons — 'the second brain.'",
+          type: "Intrinsic Enteric (Autonomous)",
+          function: "Auerbach's: coordinates peristalsis, migrating motor complex, segmentation. Meissner's: regulates mucosal blood flow, epithelial secretion (HCl, mucus, bicarbonate), immune response modulation. Operates independently of CNS (but modulated by vagus/sympathetics).",
+          pathology: "Enteric glial cell inflammation (enteric gliopathy) detected on biopsy — H. pylori infection disrupts mucosal barrier regulation via submucosal plexus. ICC (interstitial cells of Cajal) density reduced near ulcer site."
+        }
+      ]
+    },
+
+    // ─────────────────── 9. KIDNEYS & URINARY SYSTEM ───────────────────
+    kidneys: {
+      organName: "Kidneys & Urinary System",
+      anatomicalPart: "Left Kidney — Renal Pelvis & Urinary Bladder",
+      disease: "Left Nephrolithiasis with Mild Hydronephrosis",
+      severity: "MODERATE",
+      report:
+        "CT KUB reveals a 7mm calcium oxalate calculus in the left renal pelvis with " +
+        "mild left hydronephrosis (AP pelvis diameter 18mm). Right kidney unremarkable. " +
+        "Creatinine 1.1 mg/dL (eGFR 72). Urinalysis: microscopic hematuria, no infection. " +
+        "24-hour urine: hypercalciuria (320mg/day), low citrate. Urology referral for SWL " +
+        "or ureteroscopy. Thiazide diuretic and potassium citrate for metabolic prevention.",
+      innervation: [
+        {
+          nerveName: "Renal Sympathetic Nerves (T10–L1 — Renal Plexus)",
+          branch: "T10-L1 preganglionic → Least splanchnic nerve (T12) + Lumbar splanchnic nerves → Aorticorenal ganglion → Postganglionic fibers forming renal plexus → Along renal artery branches into kidney parenchyma (afferent arteriole, JGA, tubules)",
+          type: "Sympathetic + Visceral Afferent",
+          function: "Efferent: renal vasoconstriction (reduces RBF/GFR), stimulates renin release from JGA (β1 receptors), increases sodium reabsorption in PCT (α1 receptors). Afferent: transmit renal pain — ureteric colic is among the most severe visceral pain.",
+          pathology: "Renal colic active — visceral afferent activation producing severe left flank-to-groin pain (T10-L1 dermatome radiation). Sympathetic hyperactivation causing reflex nausea/vomiting via vagal connections. Renal denervation therapy NOT indicated at this stage."
+        },
+        {
+          nerveName: "Pelvic Splanchnic Nerves (S2–S4) — Parasympathetic to Bladder",
+          branch: "S2-S4 ventral rami → Pelvic splanchnic nerves (Nervi erigentes) → Inferior hypogastric (pelvic) plexus → Vesical plexus → Detrusor muscle and internal urethral sphincter",
+          type: "Parasympathetic",
+          function: "Contracts detrusor muscle (M3 muscarinic receptors) for bladder emptying. Relaxes internal urethral sphincter. Essential for micturition reflex. Also provides parasympathetic innervation to rectum and reproductive organs.",
+          pathology: "Bladder function intact. Post-void residual 25mL (normal). No evidence of neurogenic bladder. Micturition reflex preserved despite pain-related urinary frequency."
+        },
+        {
+          nerveName: "Pudendal Nerve (S2–S4) — External Urethral Sphincter",
+          branch: "S2-S4 ventral rami → Sacral plexus → Pudendal nerve → Passes through greater sciatic foramen → Around ischial spine → Through lesser sciatic foramen → Pudendal (Alcock's) canal → Inferior rectal, Perineal, and Dorsal nerve branches",
+          type: "Somatic (Motor + Sensory)",
+          function: "Motor to external urethral sphincter (voluntary continence), external anal sphincter, and pelvic floor muscles (levator ani). Sensation from perineum, external genitalia, and anal canal. ONLY voluntary control over urination.",
+          pathology: "Pudendal nerve function intact — voluntary sphincter control preserved. Bulbocavernosus reflex present. No perineal sensory deficit."
+        }
+      ]
+    },
+
+    // ─────────────────── 10. SKELETON & SPINE ───────────────────
+    skeleton: {
+      organName: "Skeleton & Spine",
+      anatomicalPart: "Vertebral Column — Lumbar Region (L4-L5)",
+      disease: "Lumbar Disc Herniation with Radiculopathy",
+      severity: "MODERATE",
+      report:
+        "MRI lumbar spine demonstrates a posterolateral disc herniation at L4-L5 " +
+        "compressing the traversing L5 nerve root. Disc extrusion measures 8mm with " +
+        "downward migration. Moderate bilateral facet arthropathy at L4-L5 and L5-S1. " +
+        "Patient presents with left L5 radiculopathy — positive SLR at 35°, dorsiflexion " +
+        "weakness (4/5), numbness over lateral leg and dorsum of foot. Trial of epidural " +
+        "steroid injection; consider microdiscectomy if no improvement in 6 weeks.",
+      innervation: [
+        {
+          nerveName: "Cervical Plexus (C1–C4)",
+          branch: "C1-C4 ventral rami → Cervical plexus. Cutaneous: Lesser occipital (C2), Great auricular (C2-C3), Transverse cervical (C2-C3), Supraclavicular nerves (C3-C4). Motor: Ansa cervicalis (C1-C3 → infrahyoid muscles), Phrenic nerve (C3-C5).",
+          type: "Mixed (Motor + Sensory)",
+          function: "Sensory innervation to neck, posterior scalp, auricle, and supraclavicular regions. Motor to infrahyoid strap muscles (ansa cervicalis) and diaphragm (phrenic). Deep cervical plexus innervates prevertebral muscles.",
+          pathology: "Cervical plexus intact. No upper cervical sensory deficits. Phrenic nerve function confirmed (see Diaphragm). Cervical MRI unremarkable."
+        },
+        {
+          nerveName: "Brachial Plexus (C5–T1)",
+          branch: "C5-T1 ventral rami → Trunks (Superior C5-C6, Middle C7, Inferior C8-T1) → Divisions → Cords (Lateral, Posterior, Medial) → Terminal branches: Musculocutaneous (C5-C7), Median (C5-T1), Ulnar (C8-T1), Radial (C5-T1), Axillary (C5-C6)",
+          type: "Mixed (Motor + Sensory)",
+          function: "Entire motor and sensory innervation of the upper extremity. Musculocutaneous: elbow flexion. Median: forearm pronation, wrist/finger flexion, thenar muscles. Ulnar: intrinsic hand muscles, hypothenar. Radial: all extensors. Axillary: deltoid, teres minor.",
+          pathology: "Brachial plexus intact bilaterally. Upper extremity strength 5/5 throughout. Normal grip strength. No Tinel's at cubital tunnel or carpal tunnel."
+        },
+        {
+          nerveName: "Lumbar Plexus (L1–L4)",
+          branch: "L1-L4 ventral rami (within psoas major). Branches: Iliohypogastric (L1), Ilioinguinal (L1), Genitofemoral (L1-L2), Lateral femoral cutaneous (L2-L3), Femoral nerve (L2-L4), Obturator nerve (L2-L4)",
+          type: "Mixed (Motor + Sensory)",
+          function: "Femoral nerve: quadriceps (knee extension), hip flexion, anterior thigh sensation, saphenous nerve (medial leg). Obturator: adductors, medial thigh sensation. LFCN: lateral thigh sensation. Ilioinguinal/Iliohypogastric: lower abdomen/inguinal sensation.",
+          pathology: "L4 contribution to femoral nerve potentially affected by L4-L5 disc. However, knee extension (quadriceps) currently 5/5 and patellar reflex 2+. Femoral nerve conduction intact."
+        },
+        {
+          nerveName: "Sacral Plexus (L4–S3) — Including Sciatic Nerve",
+          branch: "L4-S3 ventral rami → Sacral plexus (anterior to piriformis). Main branch: Sciatic nerve (L4-S3) = largest nerve in body → Exits greater sciatic foramen → Posterior thigh → Divides at popliteal fossa into Tibial (L4-S3) and Common Peroneal/Fibular (L4-S2) nerves",
+          type: "Mixed (Motor + Sensory)",
+          function: "Sciatic → Tibial nerve: posterior compartment leg (gastrocnemius, soleus — plantarflexion), plantar foot muscles/sensation. Sciatic → Common peroneal: anterior compartment (tibialis anterior — dorsiflexion), lateral compartment (peronei — eversion), dorsal foot sensation. Also: Superior/Inferior gluteal nerves, Pudendal nerve, Posterior femoral cutaneous nerve.",
+          pathology: "LEFT L5 RADICULOPATHY CONFIRMED. L4-L5 disc herniation compressing L5 root. Findings: Dorsiflexion weakness 4/5 (tibialis anterior — deep peroneal from L5), numbness lateral leg and foot dorsum (superficial peroneal L5 dermatome). EMG: acute denervation in L5 myotome. SLR positive at 35°."
+        }
+      ]
+    },
+
+    // ─────────────────── 11. MUSCULAR SYSTEM ───────────────────
+    muscles: {
+      organName: "Muscular System",
+      anatomicalPart: "Bilateral Upper & Lower Extremity Musculature",
+      disease: "Left L5 Myotomal Weakness (Secondary to Radiculopathy)",
+      severity: "LOW",
+      report:
+        "Motor examination reveals isolated left tibialis anterior weakness (MRC 4/5) " +
+        "and left extensor hallucis longus weakness (MRC 4/5), consistent with L5 " +
+        "myotomal distribution. All other myotomes grade 5/5 bilaterally. No wasting or " +
+        "fasciculations observed. EMG shows acute denervation potentials (fibrillations " +
+        "and positive sharp waves) in left L5 innervated muscles. NCS: normal peroneal " +
+        "motor CMAP amplitudes. Diagnosis: left L5 radiculopathy, acute, moderate severity.",
+      innervation: [
+        {
+          nerveName: "Brachial Plexus Terminal Branches (Upper Limb)",
+          branch: "Musculocutaneous (C5-C7): biceps, brachialis, coracobrachialis. Median (C5-T1): pronator teres, FCR, FDS, FDP (lateral), lumbricals 1-2, thenar muscles. Ulnar (C8-T1): FCU, FDP (medial), interossei, lumbricals 3-4, hypothenar. Radial (C5-T1): triceps, brachioradialis, extensors. Axillary (C5-C6): deltoid, teres minor.",
+          type: "Motor + Sensory",
+          function: "Complete motor control of all upper extremity muscles — 20+ muscles per limb. Each nerve carries specific myotomal fibers allowing precise localization of lesions (e.g., C5 = deltoid/biceps, C6 = brachioradialis/wrist extensors, C7 = triceps/wrist flexors, C8 = finger flexors, T1 = intrinsic hand).",
+          pathology: "All upper limb myotomes intact bilaterally (5/5). No evidence of brachial plexopathy, cervical radiculopathy, or peripheral nerve entrapment. Grip strength dynamometry: R 42kg, L 40kg (normal for age/sex)."
+        },
+        {
+          nerveName: "Femoral Nerve (L2–L4) — Anterior Thigh",
+          branch: "L2-L4 → Lumbar plexus → Femoral nerve → Passes under inguinal ligament → Motor branches to quadriceps (rectus femoris, vastus lateralis/medialis/intermedius), sartorius, iliacus. Sensory: anterior femoral cutaneous + Saphenous nerve (medial leg to medial malleolus)",
+          type: "Motor + Sensory",
+          function: "Primary knee extensor nerve (quadriceps — the strongest muscle group in the body). Hip flexion (iliacus, sartorius). Patellar reflex (L3-L4 via femoral nerve). Saphenous branch provides sensation to medial leg — longest purely sensory nerve.",
+          pathology: "Bilateral knee extension 5/5. Patellar reflexes 2+ and symmetric. Saphenous distribution sensation intact. No evidence of femoral neuropathy or L2-L4 radiculopathy."
+        },
+        {
+          nerveName: "Sciatic Nerve Divisions (L4–S3) — Lower Limb",
+          branch: "Tibial division (L4-S3): gastrocnemius, soleus, plantaris, popliteus, tibialis posterior, FDL, FHL, plantar foot muscles (via medial/lateral plantar nerves). Common peroneal/fibular division (L4-S2): → Deep peroneal (tibialis anterior, EHL, EDL, peroneus tertius) + Superficial peroneal (peroneus longus/brevis).",
+          type: "Motor + Sensory",
+          function: "Tibial: plantarflexion, toe flexion, foot inversion, plantar sensation (entire sole via plantar nerves). Deep peroneal: dorsiflexion, toe extension, first web space sensation. Superficial peroneal: foot eversion, lateral leg and dorsal foot sensation. Achilles reflex (S1-S2 via tibial nerve).",
+          pathology: "LEFT L5 MYOTOMAL WEAKNESS: Tibialis anterior 4/5 (deep peroneal, L5 root), EHL 4/5 (deep peroneal, L5 root). Gastrocnemius/soleus 5/5 (tibial, S1 — intact). Peroneals 5/5 (superficial peroneal, L5-S1). Pattern confirms L5 root (not common peroneal nerve) as lesion site."
+        }
+      ]
+    },
+
+    // ─────────────────── 12. CIRCULATORY SYSTEM ───────────────────
+    circulatory: {
+      organName: "Circulatory System",
+      anatomicalPart: "Arterial & Venous Network — Coronary & Peripheral",
+      disease: "LAD Coronary Stenosis & Early Peripheral Arterial Disease",
+      severity: "HIGH",
+      report:
+        "Coronary angiography reveals 90% stenosis of proximal LAD with TIMI 2 flow. " +
+        "RCA and LCx with mild atherosclerotic disease (<30%). ABI: Right 0.92, Left 0.88 " +
+        "(borderline PAD). Carotid duplex: bilateral intimal thickening, no hemodynamically " +
+        "significant stenosis. LDL-C 168 mg/dL despite statin therapy. Intensify lipid " +
+        "management (add ezetimibe or PCSK9 inhibitor). PCI to LAD proceeding.",
+      innervation: [
+        {
+          nerveName: "Sympathetic Vasomotor Nerves (Sympathetic Chain T1–L2)",
+          branch: "T1-L2 preganglionic → Sympathetic chain ganglia → Postganglionic fibers travel with EVERY artery to target organs → Periarterial plexus on vascular smooth muscle throughout the body",
+          type: "Sympathetic (Vasomotor Efferent)",
+          function: "Tonic vasoconstriction of resistance arteries via α1 adrenergic receptors (maintains blood pressure). Venous constriction (α1/α2 — reduces capacitance). Coronary vasodilation via β2 receptors. Controls total peripheral resistance — the primary mechanism of blood pressure regulation.",
+          pathology: "Endothelial dysfunction in atherosclerotic segments impairs normal vasodilator response to sympathetic stimulation. Coronary vasospasm risk at LAD stenosis site. Resting sympathetic tone elevated (plasma norepinephrine 892 pg/mL)."
+        },
+        {
+          nerveName: "Baroreceptor Afferents — CN IX & CN X",
+          branch: "Carotid sinus baroreceptors → Carotid sinus nerve (Hering's nerve, branch of CN IX Glossopharyngeal) → Nucleus tractus solitarius (NTS) in medulla. Aortic arch baroreceptors → Aortic depressor nerve (branch of CN X Vagus) → NTS → Baroreflex modulation of sympathetic/parasympathetic outflow",
+          type: "Sensory (Visceral Afferent)",
+          function: "Continuous blood pressure monitoring. Increased BP → increased baroreceptor firing → NTS activation → increases vagal tone (bradycardia) + decreases sympathetic outflow (vasodilation). The primary acute blood pressure buffering mechanism (baroreflex).",
+          pathology: "Baroreflex sensitivity reduced (BRS: 4.2 ms/mmHg, normal >6.0). Consistent with atherosclerotic stiffening of carotid sinus wall, reducing baroreceptor stretch sensitivity. Contributes to blood pressure lability and orthostatic intolerance."
+        },
+        {
+          nerveName: "Cardiac Sympathetic & Parasympathetic Plexus",
+          branch: "Cardiac plexus (superficial — below aortic arch; deep — between tracheal bifurcation and aortic arch) receives: Vagal cardiac branches (parasympathetic) + Sympathetic cardiac nerves (T1-T4) → Combined postganglionic fibers → Coronary arteries, SA node, AV node, myocardium",
+          type: "Autonomic (Mixed Sympathetic + Parasympathetic)",
+          function: "Integrated autonomic control of coronary blood flow, heart rate, conduction, and contractility. Cardiac plexus is the final common pathway where sympathetic and parasympathetic inputs converge before distributing to cardiac structures.",
+          pathology: "Post-MI cardiac autonomic dysfunction. Sympathovagal imbalance (LF/HF ratio 4.8, normal <2.0). Increased sudden cardiac death risk. Cardiac resynchronization and autonomic modulation therapy under consideration."
+        }
+      ]
+    },
+
+    // ─────────────────── 13. SKIN ───────────────────
+    skin: {
+      organName: "Skin (Integumentary System)",
+      anatomicalPart: "Full Body — Dermatome Map Assessment",
+      disease: "Left L5 Dermatome Hypoesthesia",
+      severity: "LOW",
+      report:
+        "Systematic dermatome testing reveals reduced light touch and pinprick sensation " +
+        "over the left L5 dermatome (lateral leg and dorsum of foot, including first web " +
+        "space). All other dermatomes C2-S2 intact bilaterally. Two-point discrimination " +
+        "preserved in hands (fingertips <5mm). Vibration sense intact at bilateral medial " +
+        "malleoli. Temperature sensation symmetrically normal. No allodynia or hyperalgesia " +
+        "in affected dermatome. Pattern confirms L5 radicular sensory loss.",
+      innervation: [
+        {
+          nerveName: "Cervical Dermatomes (C2–C4) — Head, Neck, Shoulder",
+          branch: "C2: posterior scalp (Greater occipital nerve). C3: lateral neck (Lesser occipital, Great auricular). C4: upper shoulder, supraclavicular region (Supraclavicular nerves). Note: C1 has NO cutaneous dermatome.",
+          type: "Sensory (Cutaneous)",
+          function: "Sensory innervation to posterior scalp, auricle, neck, and 'cape' distribution over shoulders. C2-C4 overlap forms cervical plexus cutaneous territory. Critical for surgical planning (posterior fossa, neck dissection).",
+          pathology: "Intact bilaterally. No cervical radicular sensory deficits."
+        },
+        {
+          nerveName: "Thoracic Dermatomes (T1–T12) — Trunk Bands",
+          branch: "T1-T12 ventral rami → Intercostal nerves → Lateral cutaneous branches (midaxillary line) + Anterior cutaneous branches (paramedian). Landmarks: T4 = nipple line, T6 = xiphoid, T10 = umbilicus, T12 = just above inguinal fold.",
+          type: "Sensory (Cutaneous)",
+          function: "Sensory innervation in horizontal bands across chest, abdomen, and back. Each dermatome overlaps ~50% with adjacent levels — requires at least 2 contiguous root lesions to produce detectable sensory loss. Abdominal reflexes test T7-T12.",
+          pathology: "All thoracic dermatomes intact bilaterally. Abdominal reflexes present in all four quadrants. No truncal sensory level."
+        },
+        {
+          nerveName: "Lumbosacral Dermatomes (L1–S5) — Lower Limb & Perineum",
+          branch: "L1: inguinal region. L2: anterior thigh (upper). L3: medial thigh (to knee). L4: medial leg (saphenous territory). L5: LATERAL LEG + FOOT DORSUM + FIRST WEB SPACE. S1: lateral foot + sole + posterior calf. S2: posterior thigh. S3-S5: perianal ('saddle') region.",
+          type: "Sensory (Cutaneous)",
+          function: "L5 dermatome is clinically critical — most commonly affected in lumbar disc herniation. Tested by pinprick/light touch over lateral calf and dorsal foot. S1 tested on lateral foot. Saddle anesthesia (S3-S5) is a red flag for cauda equina syndrome.",
+          pathology: "LEFT L5 DERMATOME HYPOESTHESIA CONFIRMED. Light touch 6/10 (vs 10/10 contralateral). Pinprick reduced over lateral leg and first web space. Pattern is dermatomal (not peripheral nerve distribution), confirming L5 root pathology. No saddle anesthesia — cauda equina excluded."
+        }
+      ]
+    }
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SECTION 2: NERVE PATHWAY 3D METADATA
+   Maps organ keys to the nerve path entity IDs that should highlight
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const NERVE_ORGAN_MAP = {
+  brain:       ['nerve-spinal-cord', 'nerve-cranial-origin'],
+  eyes:        ['nerve-spinal-cord', 'nerve-cranial-origin'],
+  heart:       ['nerve-vagus', 'nerve-sympathetic-cardiac', 'nerve-phrenic'],
+  lungs:       ['nerve-vagus', 'nerve-sympathetic-cardiac', 'nerve-phrenic'],
+  diaphragm:   ['nerve-phrenic', 'nerve-intercostal'],
+  liver:       ['nerve-vagus', 'nerve-splanchnic', 'nerve-phrenic'],
+  gallbladder: ['nerve-vagus', 'nerve-splanchnic', 'nerve-phrenic'],
+  stomach:     ['nerve-vagus', 'nerve-splanchnic', 'nerve-enteric'],
+  kidneys:     ['nerve-splanchnic', 'nerve-pelvic-splanchnic', 'nerve-pudendal'],
+  skeleton:    ['nerve-spinal-cord', 'nerve-brachial-plexus', 'nerve-sciatic', 'nerve-lumbar-plexus'],
+  muscles:     ['nerve-brachial-plexus', 'nerve-sciatic', 'nerve-lumbar-plexus'],
+  circulatory: ['nerve-vagus', 'nerve-sympathetic-cardiac', 'nerve-spinal-cord'],
+  skin:        ['nerve-spinal-cord', 'nerve-intercostal', 'nerve-brachial-plexus', 'nerve-sciatic']
+};
+
+const ALL_NERVE_IDS = [
+  'nerve-spinal-cord', 'nerve-cranial-origin', 'nerve-vagus',
+  'nerve-sympathetic-cardiac', 'nerve-phrenic', 'nerve-intercostal',
+  'nerve-splanchnic', 'nerve-enteric', 'nerve-brachial-plexus',
+  'nerve-lumbar-plexus', 'nerve-sciatic', 'nerve-pelvic-splanchnic',
+  'nerve-pudendal'
+];
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SECTION 3: A-FRAME COMPONENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+// ─── look-at-camera ─────────────────────────────
+AFRAME.registerComponent('look-at-camera', {
+  tick: function () {
+    const cam = this.el.sceneEl.camera;
+    if (!cam) return;
+    const camPos = new THREE.Vector3();
+    cam.getWorldPosition(camPos);
+    this.el.object3D.lookAt(camPos);
+  }
+});
+
+// ─── pulse-animation ─────────────────────────────
+AFRAME.registerComponent('pulse-animation', {
+  schema: {
+    speed: { type: 'number', default: 1.0 },
+    amplitude: { type: 'number', default: 0.04 }
+  },
+  init: function () {
+    this._baseScale = null;
+    this._time = Math.random() * Math.PI * 2;
+  },
+  tick: function (time, delta) {
+    if (!this._baseScale) {
+      const s = this.el.getAttribute('scale') || { x: 1, y: 1, z: 1 };
+      this._baseScale = { x: s.x, y: s.y, z: s.z };
+    }
+    this._time += (delta / 1000) * this.data.speed;
+    const f = 1 + Math.sin(this._time) * this.data.amplitude;
+    this.el.object3D.scale.set(
+      this._baseScale.x * f,
+      this._baseScale.y * f,
+      this._baseScale.z * f
+    );
+  }
+});
+
+// ─── grid-floor ─────────────────────────────
+AFRAME.registerComponent('grid-floor', {
+  init: function () {
+    const g = new THREE.GridHelper(50, 100, 0x1a3a5c, 0x0d1f33);
+    this.el.setObject3D('grid', g);
+  }
+});
+
+// ─── floating-particles ─────────────────────────────
+AFRAME.registerComponent('floating-particles', {
+  init: function () {
+    const count = 300;
+    const geo = new THREE.BufferGeometry();
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i += 3) {
+      pos[i] = (Math.random() - 0.5) * 24;
+      pos[i + 1] = Math.random() * 10;
+      pos[i + 2] = (Math.random() - 0.5) * 24;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({ color: 0x1a6a8a, size: 0.025, transparent: true, opacity: 0.4 });
+    this._pts = new THREE.Points(geo, mat);
+    this.el.setObject3D('particles', this._pts);
+  },
+  tick: function (t) { if (this._pts) this._pts.rotation.y = t * 0.00002; }
+});
+
+// ─── nerve-glow (pulsing emissive for nerve paths) ─────────────────────────────
+AFRAME.registerComponent('nerve-glow', {
+  schema: { active: { type: 'boolean', default: false } },
+  init: function () { this._time = Math.random() * 6.28; },
+  tick: function (time, delta) {
+    this._time += (delta / 1000) * 3;
+    const base = this.data.active ? 0.6 : 0.15;
+    const pulse = this.data.active ? Math.sin(this._time) * 0.3 : 0;
+    const opacity = base + pulse;
+    const children = this.el.querySelectorAll('[material]');
+    children.forEach(c => {
+      c.setAttribute('material', 'opacity', Math.max(0.05, opacity));
+      if (this.data.active) {
+        c.setAttribute('material', 'emissive', '#ffeb3b');
+        c.setAttribute('material', 'emissiveIntensity', 0.5 + pulse * 0.3);
+      } else {
+        c.setAttribute('material', 'emissive', '#000000');
+        c.setAttribute('material', 'emissiveIntensity', 0);
+      }
+    });
+  }
+});
+
+// ─── organ-interaction (MAIN — hover labels, click reports, nerve highlights) ──
+AFRAME.registerComponent('organ-interaction', {
+  schema: { organKey: { type: 'string', default: '' } },
+  init: function () {
+    const el = this.el;
+    const key = this.data.organKey;
+    const organData = PATIENT_DATA.organs[key];
+    if (!organData) return;
+
+    this._labelEl = null;
+    this._origScale = null;
+
+    el.addEventListener('mouseenter', () => {
+      this._showLabel(organData);
+      this._origScale = this._origScale || { ...el.getAttribute('scale') || { x: 1, y: 1, z: 1 } };
+      el.setAttribute('scale', {
+        x: this._origScale.x * 1.1,
+        y: this._origScale.y * 1.1,
+        z: this._origScale.z * 1.1
+      });
+      this._setEmissive(el, 0.3);
+      this._highlightNerves(key, true);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      this._hideLabel();
+      if (this._origScale) el.setAttribute('scale', this._origScale);
+      this._setEmissive(el, 0);
+      this._highlightNerves(key, false);
+    });
+
+    el.addEventListener('click', () => {
+      this._showReport(organData, 'diagnostic');
+    });
+  },
+
+  _setEmissive: function (entity, intensity) {
+    const setOnEl = (e) => {
+      const mat = e.getAttribute('material');
+      if (mat) {
+        const c = mat.color || '#ffffff';
+        e.setAttribute('material', 'emissive', intensity > 0 ? c : '#000000');
+        e.setAttribute('material', 'emissiveIntensity', intensity);
+      }
+    };
+    setOnEl(entity);
+    entity.querySelectorAll('[material]').forEach(setOnEl);
+  },
+
+  _highlightNerves: function (organKey, active) {
+    const related = NERVE_ORGAN_MAP[organKey] || [];
+    ALL_NERVE_IDS.forEach(id => {
+      const nerveEl = document.querySelector('#' + id);
+      if (!nerveEl) return;
+      if (active) {
+        nerveEl.setAttribute('nerve-glow', 'active', related.includes(id));
+        if (!related.includes(id)) {
+          nerveEl.querySelectorAll('[material]').forEach(c => c.setAttribute('material', 'opacity', 0.04));
+        }
+      } else {
+        nerveEl.setAttribute('nerve-glow', 'active', false);
+        nerveEl.querySelectorAll('[material]').forEach(c => c.setAttribute('material', 'opacity', 0.15));
+      }
+    });
+  },
+
+  _showLabel: function (organData) {
+    this._hideLabel();
+    const label = document.createElement('a-entity');
+    label.setAttribute('id', 'hover-label-active');
+    const wp = new THREE.Vector3();
+    this.el.object3D.getWorldPosition(wp);
+    label.setAttribute('position', { x: wp.x, y: wp.y + 0.38, z: wp.z });
+    label.setAttribute('look-at-camera', '');
+
+    const bg = document.createElement('a-plane');
+    bg.setAttribute('width', '1.6'); bg.setAttribute('height', '0.24');
+    bg.setAttribute('color', '#0d1b2a'); bg.setAttribute('opacity', '0.94');
+    bg.setAttribute('material', 'shader: flat'); bg.setAttribute('position', '0 0 0');
+    label.appendChild(bg);
+
+    const border = document.createElement('a-plane');
+    border.setAttribute('width', '1.62'); border.setAttribute('height', '0.26');
+    border.setAttribute('color', '#00e5ff'); border.setAttribute('opacity', '0.55');
+    border.setAttribute('material', 'shader: flat'); border.setAttribute('position', '0 0 -0.001');
+    label.appendChild(border);
+
+    const txt = document.createElement('a-text');
+    txt.setAttribute('value', organData.anatomicalPart);
+    txt.setAttribute('align', 'center'); txt.setAttribute('color', '#e0f7fa');
+    txt.setAttribute('width', '2.0'); txt.setAttribute('position', '0 0 0.002');
+    txt.setAttribute('font', 'mozillavr');
+    label.appendChild(txt);
+
+    this._labelEl = label;
+    this.el.sceneEl.appendChild(label);
+  },
+
+  _hideLabel: function () {
+    if (this._labelEl && this._labelEl.parentNode) this._labelEl.parentNode.removeChild(this._labelEl);
+    this._labelEl = null;
+  },
+
+  _showReport: function (organData, tab) {
+    const panel = document.querySelector('#report-panel');
+    if (!panel) return;
+
+    // Position in front of camera
+    const cam = document.querySelector('#vr-camera');
+    if (cam) {
+      const cp = new THREE.Vector3();
+      const cd = new THREE.Vector3();
+      cam.object3D.getWorldPosition(cp);
+      cam.object3D.getWorldDirection(cd);
+      panel.setAttribute('position', {
+        x: cp.x - cd.x * 2.2,
+        y: cp.y - cd.y * 2.2 + 0.15,
+        z: cp.z - cd.z * 2.2
+      });
+      panel.object3D.lookAt(cp);
+    }
+
+    const sevColor = organData.severity === 'HIGH' ? '#ff1744' : organData.severity === 'MODERATE' ? '#ffab00' : '#66bb6a';
+    const sevLabel = organData.severity === 'HIGH' ? 'HIGH RISK' : organData.severity === 'MODERATE' ? 'MODERATE' : 'LOW RISK';
+
+    // Set header
+    panel.querySelector('#rpt-title').setAttribute('text', { value: 'VR DIAGNOSTIC REPORT', color: '#00e5ff', align: 'center', width: 2.6, font: 'mozillavr', wrapCount: 45 });
+    panel.querySelector('#rpt-patient').setAttribute('text', {
+      value: `Patient: ${PATIENT_DATA.patientName}  |  MRN: ${PATIENT_DATA.patientId}\nAge: ${PATIENT_DATA.age}  |  Sex: ${PATIENT_DATA.sex}  |  Scan: ${PATIENT_DATA.scanDate}`,
+      color: '#78909c', align: 'center', width: 2.4, font: 'mozillavr', wrapCount: 65
+    });
+
+    panel.querySelector('#rpt-organ').setAttribute('text', { value: `ORGAN: ${organData.organName.toUpperCase()}`, color: '#e0f7fa', align: 'center', width: 2.4, font: 'mozillavr', wrapCount: 45 });
+    panel.querySelector('#rpt-site').setAttribute('text', { value: `Site: ${organData.anatomicalPart}`, color: '#b0bec5', align: 'center', width: 2.3, font: 'mozillavr', wrapCount: 55 });
+    panel.querySelector('#rpt-disease').setAttribute('text', { value: `DIAGNOSIS: ${organData.disease}`, color: sevColor, align: 'center', width: 2.4, font: 'mozillavr', wrapCount: 50 });
+    panel.querySelector('#rpt-severity').setAttribute('text', { value: `SEVERITY: ${sevLabel}`, color: sevColor, align: 'center', width: 2.2, font: 'mozillavr', wrapCount: 40 });
+
+    // Tab content
+    const diagContent = panel.querySelector('#rpt-diag-content');
+    const nerveContent = panel.querySelector('#rpt-nerve-content');
+    const tabDiag = panel.querySelector('#tab-diagnostic');
+    const tabNerve = panel.querySelector('#tab-nerves');
+
+    if (tab === 'diagnostic') {
+      diagContent.setAttribute('visible', true);
+      nerveContent.setAttribute('visible', false);
+      tabDiag.querySelector('a-plane').setAttribute('color', '#00838f');
+      tabNerve.querySelector('a-plane').setAttribute('color', '#1a2a3a');
+
+      panel.querySelector('#rpt-analysis-label').setAttribute('text', { value: 'ANALYSIS & RECOMMENDATIONS:', color: '#4dd0e1', align: 'left', width: 2.2, font: 'mozillavr', wrapCount: 50 });
+      panel.querySelector('#rpt-analysis').setAttribute('text', { value: organData.report, color: '#cfd8dc', align: 'left', width: 2.2, font: 'mozillavr', wrapCount: 62 });
+    } else {
+      diagContent.setAttribute('visible', false);
+      nerveContent.setAttribute('visible', true);
+      tabDiag.querySelector('a-plane').setAttribute('color', '#1a2a3a');
+      tabNerve.querySelector('a-plane').setAttribute('color', '#00838f');
+
+      // Build nerve innervation text
+      let nerveText = '';
+      const nerves = organData.innervation || [];
+      // Show up to 3 nerves per page (limited VR text space)
+      const pageSize = 3;
+      const currentPage = panel._nervePage || 0;
+      const start = currentPage * pageSize;
+      const pageNerves = nerves.slice(start, start + pageSize);
+
+      pageNerves.forEach((n, i) => {
+        nerveText += `[${start + i + 1}] ${n.nerveName}\n`;
+        nerveText += `    Type: ${n.type}\n`;
+        nerveText += `    Branch: ${n.branch.substring(0, 90)}...\n`;
+        nerveText += `    Function: ${n.function.substring(0, 100)}...\n`;
+        nerveText += `    Finding: ${n.pathology.substring(0, 100)}...\n\n`;
+      });
+
+      if (nerves.length > pageSize) {
+        nerveText += `--- Page ${currentPage + 1}/${Math.ceil(nerves.length / pageSize)} | Click [>] for more ---`;
+      }
+
+      panel.querySelector('#rpt-nerve-list').setAttribute('text', { value: nerveText, color: '#cfd8dc', align: 'left', width: 2.3, font: 'mozillavr', wrapCount: 68, lineHeight: 55 });
+    }
+
+    // Store current organ data for tab switching and pagination
+    panel._currentOrgan = organData;
+    panel._nervePage = panel._nervePage || 0;
+    panel.setAttribute('visible', true);
+  }
+});
+
+// ─── tab-switch ─────────────────────────────
+AFRAME.registerComponent('tab-switch', {
+  schema: { tab: { type: 'string', default: 'diagnostic' } },
+  init: function () {
+    this.el.addEventListener('click', () => {
+      const panel = document.querySelector('#report-panel');
+      if (!panel || !panel._currentOrgan) return;
+      if (this.data.tab === 'nerves') panel._nervePage = 0;
+      // Re-render the report with the new tab
+      const organData = panel._currentOrgan;
+      const comp = { _showReport: AFRAME.components['organ-interaction'].Component.prototype._showReport };
+      comp._showReport.call({ el: { sceneEl: document.querySelector('a-scene') } }, organData, this.data.tab);
+    });
+  }
+});
+
+// ─── nerve-page-nav ─────────────────────────────
+AFRAME.registerComponent('nerve-page-nav', {
+  schema: { direction: { type: 'number', default: 1 } },
+  init: function () {
+    this.el.addEventListener('click', () => {
+      const panel = document.querySelector('#report-panel');
+      if (!panel || !panel._currentOrgan) return;
+      const nerves = panel._currentOrgan.innervation || [];
+      const totalPages = Math.ceil(nerves.length / 3);
+      panel._nervePage = (panel._nervePage || 0) + this.data.direction;
+      if (panel._nervePage < 0) panel._nervePage = totalPages - 1;
+      if (panel._nervePage >= totalPages) panel._nervePage = 0;
+      const comp = AFRAME.components['organ-interaction'].Component.prototype;
+      comp._showReport.call({ el: { sceneEl: document.querySelector('a-scene') } }, panel._currentOrgan, 'nerves');
+    });
+  }
+});
+
+// ─── close-panel ─────────────────────────────
+AFRAME.registerComponent('close-panel', {
+  init: function () {
+    this.el.addEventListener('click', () => {
+      const p = document.querySelector('#report-panel');
+      if (p) { p.setAttribute('visible', false); p._currentOrgan = null; p._nervePage = 0; }
+    });
+  }
+});
+
+// ─── layer-toggle ─────────────────────────────
+AFRAME.registerComponent('layer-toggle', {
+  schema: { layer: { type: 'string', default: '' } },
+  init: function () {
+    this.el.addEventListener('click', () => {
+      const layerId = 'layer-' + this.data.layer;
+      const layerEl = document.querySelector('#' + layerId);
+      if (!layerEl) return;
+      const vis = layerEl.getAttribute('visible');
+      layerEl.setAttribute('visible', !vis);
+      // Toggle button appearance
+      const btn = this.el.querySelector('a-plane');
+      if (btn) {
+        btn.setAttribute('opacity', !vis ? 0.9 : 0.35);
+      }
+    });
+  }
+});
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     A-FRAME SCENE
+     ═══════════════════════════════════════════════════════════════════ -->
+<a-scene
+  vr-mode-ui="enabled: true"
+  background="color: #060b18"
+  fog="type: exponential; color: #060b18; density: 0.04"
+  renderer="antialias: true; colorManagement: true; sortObjects: true; physicallyCorrectLights: true"
+  cursor="rayOrigin: mouse"
+  raycaster="objects: .clickable, .btn"
+>
+
+  <!-- ═══ ASSETS / MIXINS ═══ -->
+  <a-assets>
+    <a-mixin id="organ-mat" material="metalness: 0.2; roughness: 0.5; transparent: true; opacity: 0.88"></a-mixin>
+    <a-mixin id="nerve-mat" material="shader: standard; color: #ffeb3b; emissive: #ffeb3b; emissiveIntensity: 0.2; transparent: true; opacity: 0.15; metalness: 0.3; roughness: 0.4"></a-mixin>
+    <a-mixin id="bone-mat" material="color: #b0bec5; metalness: 0.1; roughness: 0.7; transparent: true; opacity: 0.55"></a-mixin>
+    <a-mixin id="muscle-mat" material="color: #ef5350; metalness: 0.1; roughness: 0.6; transparent: true; opacity: 0.25"></a-mixin>
+    <a-mixin id="vein-mat" material="shader: flat; color: #1565c0; transparent: true; opacity: 0.2"></a-mixin>
+    <a-mixin id="artery-mat" material="shader: flat; color: #e53935; transparent: true; opacity: 0.2"></a-mixin>
+  </a-assets>
+
+  <!-- ═══ ENVIRONMENT ═══ -->
+  <a-entity grid-floor position="0 -0.5 0"></a-entity>
+  <a-entity floating-particles></a-entity>
+
+  <!-- Platform -->
+  <a-cylinder position="0 -0.48 -3" radius="1.5" height="0.06" color="#0f2133" material="shader: flat; opacity: 0.7"></a-cylinder>
+  <a-torus position="0 -0.46 -3" radius="1.52" radius-tubular="0.008" color="#00bcd4" material="shader: flat; opacity: 0.5" rotation="90 0 0"></a-torus>
+  <a-torus position="0 -0.46 -3" radius="2.0" radius-tubular="0.005" color="#00838f" material="shader: flat; opacity: 0.15" rotation="90 0 0"></a-torus>
+
+  <!-- Backdrop pillars -->
+  <a-cylinder position="-6 2 -9" radius="0.15" height="5" color="#0d1f33" material="shader: flat; opacity: 0.35"></a-cylinder>
+  <a-cylinder position="6 2 -9" radius="0.15" height="5" color="#0d1f33" material="shader: flat; opacity: 0.35"></a-cylinder>
+  <a-cylinder position="-9 2 -6" radius="0.12" height="5" color="#0d1f33" material="shader: flat; opacity: 0.25"></a-cylinder>
+  <a-cylinder position="9 2 -6" radius="0.12" height="5" color="#0d1f33" material="shader: flat; opacity: 0.25"></a-cylinder>
+
+  <!-- ═══ LIGHTING ═══ -->
+  <a-entity light="type: ambient; color: #1a2a44; intensity: 0.35"></a-entity>
+  <a-entity light="type: directional; color: #a0d8ef; intensity: 0.6" position="2 5 2"></a-entity>
+  <a-entity light="type: point; color: #00e5ff; intensity: 0.5; distance: 10; decay: 2" position="0 3.5 -3"></a-entity>
+  <a-entity light="type: point; color: #0288d1; intensity: 0.35; distance: 7; decay: 2" position="-2.5 1 -2"></a-entity>
+  <a-entity light="type: point; color: #0288d1; intensity: 0.35; distance: 7; decay: 2" position="2.5 1 -4"></a-entity>
+  <a-entity light="type: spot; color: #e0f7fa; intensity: 1.2; angle: 40; penumbra: 0.6; distance: 12; decay: 1.5" position="0 5 -3" rotation="-90 0 0"></a-entity>
+
+  <!-- ═══ CAMERA RIG ═══ -->
+  <a-entity id="camera-rig" position="0 0 0">
+    <a-camera id="vr-camera" position="0 1.6 0" look-controls="pointerLockEnabled: false" wasd-controls="acceleration: 20">
+      <a-entity cursor="fuse: false; rayOrigin: mouse" raycaster="objects: .clickable, .btn; far: 15">
+        <a-ring position="0 0 -1" radius-inner="0.007" radius-outer="0.013" color="#00e5ff" material="shader: flat; opacity: 0.6"></a-ring>
+      </a-entity>
+    </a-camera>
+    <a-entity oculus-touch-controls="hand: left"></a-entity>
+    <a-entity oculus-touch-controls="hand: right" laser-controls="hand: right" raycaster="objects: .clickable, .btn; far: 10"></a-entity>
+  </a-entity>
+
+  <!-- ═══ TITLE HUD ═══ -->
+  <a-entity position="0 3.7 -4.5">
+    <a-text value="VR FULL-BODY ANATOMY & NERVE VISUALIZER" align="center" color="#00e5ff" width="5.5" font="mozillavr"></a-text>
+    <a-text value="Hover organ to identify  |  Click for diagnostic report + nerve analysis" align="center" color="#546e7a" width="3.8" position="0 -0.22 0" font="mozillavr"></a-text>
+    <a-text id="hud-patient" align="center" color="#78909c" width="3.2" position="0 -0.44 0" font="mozillavr"></a-text>
+  </a-entity>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       PATIENT BODY — 13 ANATOMICAL SYSTEMS
+       ═══════════════════════════════════════════════════════════════════ -->
+  <a-entity id="patient-body" position="0 0.2 -3">
+
+    <!-- ═══ LAYER: SKIN (transparent outer shell) ═══ -->
+    <a-entity id="layer-skin" visible="false">
+      <!-- Head -->
+      <a-sphere position="0 2.15 0" radius="0.32" material="color: #ffcc80; transparent: true; opacity: 0.1; shader: flat" segments-width="16" segments-height="12"></a-sphere>
+      <!-- Torso -->
+      <a-cylinder position="0 1.1 0" radius="0.48" height="1.5" material="color: #ffcc80; transparent: true; opacity: 0.08; shader: flat" segments-radial="16"></a-cylinder>
+      <!-- Legs -->
+      <a-cylinder position="-0.18 -0.25 0" radius="0.13" height="1.0" material="color: #ffcc80; transparent: true; opacity: 0.08; shader: flat"></a-cylinder>
+      <a-cylinder position="0.18 -0.25 0" radius="0.13" height="1.0" material="color: #ffcc80; transparent: true; opacity: 0.08; shader: flat"></a-cylinder>
+    </a-entity>
+
+    <!-- ═══ LAYER: SKELETON ═══ -->
+    <a-entity id="layer-skeleton">
+      <!-- Spine (cervical to sacral) -->
+      <a-cylinder position="0 1.1 0.15" radius="0.04" height="1.8" mixin="bone-mat"></a-cylinder>
+      <!-- Skull outline -->
+      <a-sphere position="0 2.18 0" radius="0.27" material="color: #90a4ae; transparent: true; opacity: 0.12; wireframe: true; shader: flat" segments-width="12" segments-height="10"></a-sphere>
+      <!-- Ribcage -->
+      <a-torus position="0 1.35 0" radius="0.42" radius-tubular="0.008" mixin="bone-mat" rotation="0 0 0" scale="1 0.32 0.65"></a-torus>
+      <a-torus position="0 1.25 0" radius="0.44" radius-tubular="0.008" mixin="bone-mat" rotation="0 0 0" scale="1 0.32 0.65"></a-torus>
+      <a-torus position="0 1.15 0" radius="0.46" radius-tubular="0.008" mixin="bone-mat" rotation="0 0 0" scale="1 0.32 0.7"></a-torus>
+      <a-torus position="0 1.05 0" radius="0.44" radius-tubular="0.008" mixin="bone-mat" rotation="0 0 0" scale="1 0.32 0.7"></a-torus>
+      <a-torus position="0 0.95 0" radius="0.42" radius-tubular="0.008" mixin="bone-mat" rotation="0 0 0" scale="1 0.32 0.65"></a-torus>
+      <!-- Pelvis -->
+      <a-torus position="0 0.35 0" radius="0.28" radius-tubular="0.015" mixin="bone-mat" rotation="85 0 0" scale="1.2 1 0.5"></a-torus>
+      <!-- Shoulder line -->
+      <a-cylinder position="0 1.55 0.05" radius="0.018" height="0.8" mixin="bone-mat" rotation="0 0 90"></a-cylinder>
+      <!-- Femurs -->
+      <a-cylinder position="-0.18 0 0" radius="0.025" height="0.6" mixin="bone-mat"></a-cylinder>
+      <a-cylinder position="0.18 0 0" radius="0.025" height="0.6" mixin="bone-mat"></a-cylinder>
+    </a-entity>
+
+    <!-- ═══ LAYER: MUSCLES ═══ -->
+    <a-entity id="layer-muscles" visible="false">
+      <!-- Chest muscles -->
+      <a-box position="-0.15 1.35 -0.1" width="0.22" height="0.25" depth="0.08" mixin="muscle-mat" rotation="0 10 0"></a-box>
+      <a-box position="0.15 1.35 -0.1" width="0.22" height="0.25" depth="0.08" mixin="muscle-mat" rotation="0 -10 0"></a-box>
+      <!-- Abdominals -->
+      <a-box position="0 1.0 -0.12" width="0.3" height="0.4" depth="0.06" mixin="muscle-mat"></a-box>
+      <!-- Deltoids -->
+      <a-sphere position="-0.42 1.52 0" radius="0.07" mixin="muscle-mat"></a-sphere>
+      <a-sphere position="0.42 1.52 0" radius="0.07" mixin="muscle-mat"></a-sphere>
+      <!-- Biceps -->
+      <a-cylinder position="-0.5 1.32 -0.02" radius="0.04" height="0.2" mixin="muscle-mat"></a-cylinder>
+      <a-cylinder position="0.5 1.32 -0.02" radius="0.04" height="0.2" mixin="muscle-mat"></a-cylinder>
+      <!-- Quads -->
+      <a-cylinder position="-0.18 0.05 -0.04" radius="0.07" height="0.35" mixin="muscle-mat"></a-cylinder>
+      <a-cylinder position="0.18 0.05 -0.04" radius="0.07" height="0.35" mixin="muscle-mat"></a-cylinder>
+    </a-entity>
+
+    <!-- ═══ LAYER: CIRCULATORY ═══ -->
+    <a-entity id="layer-circulatory" visible="false">
+      <!-- Aorta -->
+      <a-cylinder position="0.02 1.2 0.02" radius="0.02" height="0.9" mixin="artery-mat"></a-cylinder>
+      <!-- Aortic arch -->
+      <a-torus position="0 1.6 0.02" radius="0.06" radius-tubular="0.012" mixin="artery-mat" rotation="0 90 0" theta-length="180"></a-torus>
+      <!-- Iliac arteries -->
+      <a-cylinder position="-0.12 0.55 0.02" radius="0.012" height="0.4" mixin="artery-mat" rotation="0 0 15"></a-cylinder>
+      <a-cylinder position="0.12 0.55 0.02" radius="0.012" height="0.4" mixin="artery-mat" rotation="0 0 -15"></a-cylinder>
+      <!-- Vena cava -->
+      <a-cylinder position="-0.04 1.2 0.04" radius="0.018" height="0.9" mixin="vein-mat"></a-cylinder>
+      <!-- Carotid arteries -->
+      <a-cylinder position="-0.06 1.8 0.0" radius="0.01" height="0.4" mixin="artery-mat"></a-cylinder>
+      <a-cylinder position="0.06 1.8 0.0" radius="0.01" height="0.4" mixin="artery-mat"></a-cylinder>
+    </a-entity>
+
+    <!-- ═══ LAYER: NERVES ═══ -->
+    <a-entity id="layer-nerves">
+
+      <!-- Spinal Cord -->
+      <a-entity id="nerve-spinal-cord" nerve-glow>
+        <a-cylinder position="0 1.2 0.14" radius="0.022" height="1.7" mixin="nerve-mat"></a-cylinder>
+      </a-entity>
+
+      <!-- Cranial Nerve Origins (at brainstem) -->
+      <a-entity id="nerve-cranial-origin" nerve-glow>
+        <a-sphere position="0 1.82 0.06" radius="0.035" mixin="nerve-mat"></a-sphere>
+        <!-- Fan of 12 tiny lines representing cranial nerve exits -->
+        <a-cylinder position="-0.04 1.87 -0.02" radius="0.005" height="0.1" mixin="nerve-mat" rotation="40 0 30"></a-cylinder>
+        <a-cylinder position="0.04 1.87 -0.02" radius="0.005" height="0.1" mixin="nerve-mat" rotation="40 0 -30"></a-cylinder>
+        <a-cylinder position="-0.06 1.84 -0.01" radius="0.005" height="0.12" mixin="nerve-mat" rotation="20 0 50"></a-cylinder>
+        <a-cylinder position="0.06 1.84 -0.01" radius="0.005" height="0.12" mixin="nerve-mat" rotation="20 0 -50"></a-cylinder>
+        <a-cylinder position="0 1.89 -0.04" radius="0.005" height="0.15" mixin="nerve-mat" rotation="60 0 0"></a-cylinder>
+      </a-entity>
+
+      <!-- Vagus Nerve (CN X) — brainstem to abdomen -->
+      <a-entity id="nerve-vagus" nerve-glow>
+        <a-cylinder position="-0.08 1.65 0.04" radius="0.008" height="0.25" mixin="nerve-mat" rotation="0 0 5"></a-cylinder>
+        <a-cylinder position="-0.09 1.35 0.02" radius="0.008" height="0.35" mixin="nerve-mat"></a-cylinder>
+        <a-cylinder position="-0.08 1.0 0.0" radius="0.007" height="0.35" mixin="nerve-mat" rotation="0 0 -3"></a-cylinder>
+        <a-cylinder position="-0.06 0.7 -0.02" radius="0.006" height="0.25" mixin="nerve-mat"></a-cylinder>
+        <!-- Right vagus -->
+        <a-cylinder position="0.08 1.65 0.04" radius="0.008" height="0.25" mixin="nerve-mat" rotation="0 0 -5"></a-cylinder>
+        <a-cylinder position="0.09 1.35 0.02" radius="0.008" height="0.35" mixin="nerve-mat"></a-cylinder>
+        <a-cylinder position="0.08 1.0 0.0" radius="0.007" height="0.35" mixin="nerve-mat" rotation="0 0 3"></a-cylinder>
+      </a-entity>
+
+      <!-- Sympathetic Cardiac Nerves -->
+      <a-entity id="nerve-sympathetic-cardiac" nerve-glow>
+        <a-cylinder position="-0.12 1.4 0.12" radius="0.006" height="0.2" mixin="nerve-mat" rotation="0 0 15"></a-cylinder>
+        <a-cylinder position="0.12 1.4 0.12" radius="0.006" height="0.2" mixin="nerve-mat" rotation="0 0 -15"></a-cylinder>
+        <!-- T1-T4 paravertebral ganglia -->
+        <a-sphere position="-0.08 1.5 0.13" radius="0.012" mixin="nerve-mat"></a-sphere>
+        <a-sphere position="0.08 1.5 0.13" radius="0.012" mixin="nerve-mat"></a-sphere>
+        <a-sphere position="-0.08 1.4 0.13" radius="0.012" mixin="nerve-mat"></a-sphere>
+        <a-sphere position="0.08 1.4 0.13" radius="0.012" mixin="nerve-mat"></a-sphere>
+      </a-entity>
+
+      <!-- Phrenic Nerve (C3-C5 to diaphragm) -->
+      <a-entity id="nerve-phrenic" nerve-glow>
+        <a-cylinder position="-0.1 1.6 0.06" radius="0.007" height="0.15" mixin="nerve-mat" rotation="0 0 8"></a-cylinder>
+        <a-cylinder position="-0.12 1.35 0.0" radius="0.007" height="0.35" mixin="nerve-mat" rotation="0 0 2"></a-cylinder>
+        <a-cylinder position="-0.13 1.05 -0.02" radius="0.007" height="0.3" mixin="nerve-mat" rotation="0 0 -3"></a-cylinder>
+        <!-- Right phrenic -->
+        <a-cylinder position="0.1 1.6 0.06" radius="0.007" height="0.15" mixin="nerve-mat" rotation="0 0 -8"></a-cylinder>
+        <a-cylinder position="0.12 1.35 0.0" radius="0.007" height="0.35" mixin="nerve-mat" rotation="0 0 -2"></a-cylinder>
+        <a-cylinder position="0.13 1.05 -0.02" radius="0.007" height="0.3" mixin="nerve-mat" rotation="0 0 3"></a-cylinder>
+      </a-entity>
+
+      <!-- Intercostal Nerves (along ribs) -->
+      <a-entity id="nerve-intercostal" nerve-glow>
+        <a-torus position="0 1.35 0" radius="0.38" radius-tubular="0.004" mixin="nerve-mat" scale="1 0.15 0.6" rotation="0 0 0"></a-torus>
+        <a-torus position="0 1.25 0" radius="0.4" radius-tubular="0.004" mixin="nerve-mat" scale="1 0.15 0.6" rotation="0 0 0"></a-torus>
+        <a-torus position="0 1.15 0" radius="0.42" radius-tubular="0.004" mixin="nerve-mat" scale="1 0.15 0.65" rotation="0 0 0"></a-torus>
+        <a-torus position="0 1.05 0" radius="0.4" radius-tubular="0.004" mixin="nerve-mat" scale="1 0.15 0.65" rotation="0 0 0"></a-torus>
+        <a-torus position="0 0.95 0" radius="0.38" radius-tubular="0.004" mixin="nerve-mat" scale="1 0.15 0.6" rotation="0 0 0"></a-torus>
+      </a-entity>
+
+      <!-- Greater Splanchnic Nerve (T5-T9 to celiac ganglion) -->
+      <a-entity id="nerve-splanchnic" nerve-glow>
+        <a-cylinder position="-0.06 1.1 0.12" radius="0.006" height="0.4" mixin="nerve-mat" rotation="8 0 5"></a-cylinder>
+        <a-cylinder position="0.06 1.1 0.12" radius="0.006" height="0.4" mixin="nerve-mat" rotation="8 0 -5"></a-cylinder>
+        <!-- Celiac ganglion -->
+        <a-sphere position="0 0.82 0.08" radius="0.018" mixin="nerve-mat"></a-sphere>
+      </a-entity>
+
+      <!-- Enteric Nervous System (around GI) -->
+      <a-entity id="nerve-enteric" nerve-glow>
+        <a-torus position="0.04 0.68 -0.04" radius="0.12" radius-tubular="0.004" mixin="nerve-mat" rotation="15 0 0"></a-torus>
+        <a-torus position="0 0.52 -0.02" radius="0.16" radius-tubular="0.004" mixin="nerve-mat" rotation="80 0 0"></a-torus>
+      </a-entity>
+
+      <!-- Brachial Plexus (C5-T1 to arms) -->
+      <a-entity id="nerve-brachial-plexus" nerve-glow>
+        <!-- Left -->
+        <a-cylinder position="-0.2 1.62 0.08" radius="0.008" height="0.15" mixin="nerve-mat" rotation="0 0 55"></a-cylinder>
+        <a-cylinder position="-0.32 1.55 0.04" radius="0.007" height="0.15" mixin="nerve-mat" rotation="0 0 70"></a-cylinder>
+        <a-cylinder position="-0.42 1.48 0.0" radius="0.006" height="0.2" mixin="nerve-mat" rotation="0 0 5"></a-cylinder>
+        <!-- Right -->
+        <a-cylinder position="0.2 1.62 0.08" radius="0.008" height="0.15" mixin="nerve-mat" rotation="0 0 -55"></a-cylinder>
+        <a-cylinder position="0.32 1.55 0.04" radius="0.007" height="0.15" mixin="nerve-mat" rotation="0 0 -70"></a-cylinder>
+        <a-cylinder position="0.42 1.48 0.0" radius="0.006" height="0.2" mixin="nerve-mat" rotation="0 0 -5"></a-cylinder>
+      </a-entity>
+
+      <!-- Lumbar Plexus (L1-L4) -->
+      <a-entity id="nerve-lumbar-plexus" nerve-glow>
+        <a-cylinder position="-0.08 0.5 0.1" radius="0.007" height="0.2" mixin="nerve-mat" rotation="0 0 15"></a-cylinder>
+        <a-cylinder position="0.08 0.5 0.1" radius="0.007" height="0.2" mixin="nerve-mat" rotation="0 0 -15"></a-cylinder>
+        <!-- Femoral nerve branches -->
+        <a-cylinder position="-0.14 0.3 0.0" radius="0.006" height="0.25" mixin="nerve-mat" rotation="0 0 5"></a-cylinder>
+        <a-cylinder position="0.14 0.3 0.0" radius="0.006" height="0.25" mixin="nerve-mat" rotation="0 0 -5"></a-cylinder>
+      </a-entity>
+
+      <!-- Sciatic Nerve (L4-S3 to legs) -->
+      <a-entity id="nerve-sciatic" nerve-glow>
+        <!-- Left sciatic -->
+        <a-cylinder position="-0.15 0.25 0.08" radius="0.01" height="0.2" mixin="nerve-mat"></a-cylinder>
+        <a-cylinder position="-0.16 0.0 0.06" radius="0.009" height="0.3" mixin="nerve-mat"></a-cylinder>
+        <a-cylinder position="-0.17 -0.3 0.04" radius="0.007" height="0.3" mixin="nerve-mat"></a-cylinder>
+        <!-- Right sciatic -->
+        <a-cylinder position="0.15 0.25 0.08" radius="0.01" height="0.2" mixin="nerve-mat"></a-cylinder>
+        <a-cylinder position="0.16 0.0 0.06" radius="0.009" height="0.3" mixin="nerve-mat"></a-cylinder>
+        <a-cylinder position="0.17 -0.3 0.04" radius="0.007" height="0.3" mixin="nerve-mat"></a-cylinder>
+      </a-entity>
+
+      <!-- Pelvic Splanchnic Nerves (S2-S4) -->
+      <a-entity id="nerve-pelvic-splanchnic" nerve-glow>
+        <a-cylinder position="-0.06 0.28 0.08" radius="0.005" height="0.12" mixin="nerve-mat" rotation="20 0 20"></a-cylinder>
+        <a-cylinder position="0.06 0.28 0.08" radius="0.005" height="0.12" mixin="nerve-mat" rotation="20 0 -20"></a-cylinder>
+      </a-entity>
+
+      <!-- Pudendal Nerve (S2-S4) -->
+      <a-entity id="nerve-pudendal" nerve-glow>
+        <a-cylinder position="-0.1 0.2 0.1" radius="0.005" height="0.15" mixin="nerve-mat" rotation="10 0 25"></a-cylinder>
+        <a-cylinder position="0.1 0.2 0.1" radius="0.005" height="0.15" mixin="nerve-mat" rotation="10 0 -25"></a-cylinder>
+      </a-entity>
+
+    </a-entity>
+    <!-- END layer-nerves -->
+
+    <!-- ═══ LAYER: ORGANS (CLICKABLE) ═══ -->
+    <a-entity id="layer-organs">
+
+      <!-- ──── BRAIN ──── -->
+      <a-entity id="organ-brain" class="clickable" organ-interaction="organKey: brain" pulse-animation="speed: 0.5; amplitude: 0.02" position="0 2.05 0">
+        <a-sphere radius="0.25" color="#e8a0bf" mixin="organ-mat" segments-width="20" segments-height="16"></a-sphere>
+        <a-sphere radius="0.18" position="-0.1 0.06 0" color="#d4839e" mixin="organ-mat"></a-sphere>
+        <a-sphere radius="0.18" position="0.1 0.06 0" color="#d4839e" mixin="organ-mat"></a-sphere>
+        <a-cylinder radius="0.05" height="0.15" position="0 -0.22 0.03" color="#c4738e" mixin="organ-mat"></a-cylinder>
+        <a-sphere radius="0.1" position="0 -0.16 0.07" color="#c4738e" mixin="organ-mat"></a-sphere>
+        <a-text value="BRAIN" align="center" color="#e8a0bf" width="1.0" position="0 0.36 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── EYES ──── -->
+      <a-entity id="organ-eyes" class="clickable" organ-interaction="organKey: eyes" position="0 2.12 -0.2">
+        <a-sphere radius="0.055" position="-0.1 0 0" color="#e0e0e0" mixin="organ-mat" segments-width="12" segments-height="10"></a-sphere>
+        <a-sphere radius="0.025" position="-0.1 0 -0.04" color="#5d4037" material="shader: flat"></a-sphere>
+        <a-sphere radius="0.012" position="-0.1 0 -0.055" color="#111111" material="shader: flat"></a-sphere>
+        <a-sphere radius="0.055" position="0.1 0 0" color="#e0e0e0" mixin="organ-mat" segments-width="12" segments-height="10"></a-sphere>
+        <a-sphere radius="0.025" position="0.1 0 -0.04" color="#5d4037" material="shader: flat"></a-sphere>
+        <a-sphere radius="0.012" position="0.1 0 -0.055" color="#111111" material="shader: flat"></a-sphere>
+        <a-text value="EYES" align="center" color="#bcaaa4" width="0.9" position="0 0.12 -0.05" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── HEART ──── -->
+      <a-entity id="organ-heart" class="clickable" organ-interaction="organKey: heart" pulse-animation="speed: 1.2; amplitude: 0.05" position="0.08 1.35 -0.02">
+        <a-sphere radius="0.15" color="#e53935" mixin="organ-mat" scale="1 1.15 0.85" segments-width="16" segments-height="14"></a-sphere>
+        <a-sphere radius="0.08" position="-0.08 0.1 0" color="#c62828" mixin="organ-mat"></a-sphere>
+        <a-sphere radius="0.08" position="0.08 0.1 0" color="#c62828" mixin="organ-mat"></a-sphere>
+        <a-cylinder radius="0.03" height="0.16" position="0 0.2 0" color="#b71c1c" mixin="organ-mat" rotation="0 0 -15"></a-cylinder>
+        <a-cylinder radius="0.02" height="0.12" position="0.05 0.18 0.02" color="#d32f2f" mixin="organ-mat" rotation="0 0 20"></a-cylinder>
+        <a-text value="HEART" align="center" color="#ef5350" width="1.0" position="0 0.32 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── LUNGS ──── -->
+      <a-entity id="organ-lungs" class="clickable" organ-interaction="organKey: lungs" pulse-animation="speed: 0.7; amplitude: 0.035" position="0 1.35 0">
+        <a-sphere radius="0.17" position="-0.25 0 0" color="#42a5f5" mixin="organ-mat" scale="0.65 1 0.55"></a-sphere>
+        <a-sphere radius="0.12" position="-0.25 -0.1 0" color="#1e88e5" mixin="organ-mat" scale="0.65 0.7 0.55"></a-sphere>
+        <a-sphere radius="0.19" position="0.27 0 0" color="#42a5f5" mixin="organ-mat" scale="0.7 1 0.55"></a-sphere>
+        <a-sphere radius="0.13" position="0.27 -0.12 0" color="#1e88e5" mixin="organ-mat" scale="0.7 0.7 0.55"></a-sphere>
+        <a-cylinder radius="0.025" height="0.22" position="0 0.2 0" color="#90caf9" mixin="organ-mat"></a-cylinder>
+        <a-cylinder radius="0.015" height="0.12" position="-0.08 0.08 0" color="#90caf9" mixin="organ-mat" rotation="0 0 35"></a-cylinder>
+        <a-cylinder radius="0.015" height="0.12" position="0.1 0.08 0" color="#90caf9" mixin="organ-mat" rotation="0 0 -35"></a-cylinder>
+        <a-text value="LUNGS" align="center" color="#42a5f5" width="1.0" position="0 0.38 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── DIAPHRAGM ──── -->
+      <a-entity id="organ-diaphragm" class="clickable" organ-interaction="organKey: diaphragm" pulse-animation="speed: 0.7; amplitude: 0.03" position="0 0.88 0">
+        <a-sphere radius="0.38" color="#ff8a65" mixin="organ-mat" scale="1 0.12 0.7" segments-width="20" segments-height="10" material="opacity: 0.6"></a-sphere>
+        <a-text value="DIAPHRAGM" align="center" color="#ff8a65" width="1.0" position="0 0.12 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── LIVER ──── -->
+      <a-entity id="organ-liver" class="clickable" organ-interaction="organKey: liver" pulse-animation="speed: 0.4; amplitude: 0.02" position="0.18 0.72 -0.02">
+        <a-sphere radius="0.2" color="#8d6e63" mixin="organ-mat" scale="1.3 0.55 0.7"></a-sphere>
+        <a-sphere radius="0.12" position="0.16 0 0.02" color="#795548" mixin="organ-mat" scale="1 0.5 0.65"></a-sphere>
+        <a-sphere radius="0.1" position="-0.18 0.02 0.02" color="#a1887f" mixin="organ-mat" scale="0.85 0.45 0.65"></a-sphere>
+        <a-text value="LIVER" align="center" color="#a1887f" width="1.0" position="0 0.2 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── GALLBLADDER ──── -->
+      <a-entity id="organ-gallbladder" class="clickable" organ-interaction="organKey: gallbladder" position="0.32 0.62 0.06">
+        <a-sphere radius="0.04" color="#66bb6a" mixin="organ-mat" scale="0.8 1.3 0.8"></a-sphere>
+        <a-cylinder radius="0.015" height="0.06" position="0 0.05 0" color="#81c784" mixin="organ-mat"></a-cylinder>
+        <a-text value="GALLBLADDER" align="center" color="#66bb6a" width="0.9" position="0 0.12 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── STOMACH & DIGESTIVE ──── -->
+      <a-entity id="organ-stomach" class="clickable" organ-interaction="organKey: stomach" pulse-animation="speed: 0.3; amplitude: 0.02" position="-0.08 0.68 -0.04">
+        <!-- Stomach -->
+        <a-sphere radius="0.12" color="#ffa726" mixin="organ-mat" scale="1.2 0.8 0.7"></a-sphere>
+        <a-sphere radius="0.08" position="0.1 -0.03 0" color="#fb8c00" mixin="organ-mat" scale="0.8 0.6 0.6"></a-sphere>
+        <!-- Intestines (coiled torus) -->
+        <a-torus position="0.04 -0.22 0" radius="0.14" radius-tubular="0.025" color="#ef6c00" mixin="organ-mat" rotation="80 0 0" material="opacity: 0.6"></a-torus>
+        <a-torus position="0.04 -0.22 0" radius="0.08" radius-tubular="0.02" color="#e65100" mixin="organ-mat" rotation="80 30 0" material="opacity: 0.6"></a-torus>
+        <a-text value="STOMACH" align="center" color="#ffa726" width="1.0" position="0 0.16 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── KIDNEYS & URINARY ──── -->
+      <a-entity id="organ-kidneys" class="clickable" organ-interaction="organKey: kidneys" position="0 0.65 0.1">
+        <!-- Left kidney -->
+        <a-sphere radius="0.07" position="-0.22 0 0" color="#ab47bc" mixin="organ-mat" scale="0.7 1 0.5"></a-sphere>
+        <!-- Right kidney -->
+        <a-sphere radius="0.07" position="0.22 0 0" color="#ab47bc" mixin="organ-mat" scale="0.7 1 0.5"></a-sphere>
+        <!-- Ureters -->
+        <a-cylinder radius="0.008" height="0.35" position="-0.2 -0.2 0" color="#ce93d8" mixin="organ-mat" rotation="0 0 3"></a-cylinder>
+        <a-cylinder radius="0.008" height="0.35" position="0.2 -0.2 0" color="#ce93d8" mixin="organ-mat" rotation="0 0 -3"></a-cylinder>
+        <!-- Bladder -->
+        <a-sphere radius="0.06" position="0 -0.4 -0.08" color="#7b1fa2" mixin="organ-mat" scale="1 0.8 0.8"></a-sphere>
+        <a-text value="KIDNEYS" align="center" color="#ab47bc" width="1.0" position="0 0.14 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── SKELETON (clickable entity) ──── -->
+      <a-entity id="organ-skeleton" class="clickable" organ-interaction="organKey: skeleton" position="0 0.8 0.15">
+        <!-- Invisible click target overlapping the visible skeleton layer -->
+        <a-box width="0.15" height="1.6" depth="0.15" material="transparent: true; opacity: 0.0" position="0 0.3 0"></a-box>
+        <a-text value="SPINE" align="center" color="#b0bec5" width="0.9" position="0 1.15 0.08" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── MUSCULAR SYSTEM (clickable) ──── -->
+      <a-entity id="organ-muscles" class="clickable" organ-interaction="organKey: muscles" position="0 1.1 -0.12">
+        <a-box width="0.5" height="0.8" depth="0.1" material="transparent: true; opacity: 0.0"></a-box>
+        <a-text value="MUSCLES" align="center" color="#ef5350" width="0.9" position="0 0.48 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── CIRCULATORY (clickable) ──── -->
+      <a-entity id="organ-circulatory" class="clickable" organ-interaction="organKey: circulatory" position="0.02 1.2 0.02">
+        <a-box width="0.12" height="0.9" depth="0.12" material="transparent: true; opacity: 0.0"></a-box>
+        <a-text value="VESSELS" align="center" color="#e53935" width="0.85" position="0.15 0 -0.1" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+      <!-- ──── SKIN (clickable) ──── -->
+      <a-entity id="organ-skin" class="clickable" organ-interaction="organKey: skin" position="0 1.1 -0.35">
+        <a-box width="0.3" height="0.3" depth="0.05" material="transparent: true; opacity: 0.0"></a-box>
+        <a-text value="SKIN" align="center" color="#ffcc80" width="0.85" position="0 0.2 0" font="mozillavr" opacity="0.5" look-at-camera></a-text>
+      </a-entity>
+
+    </a-entity>
+    <!-- END layer-organs -->
+
+  </a-entity>
+  <!-- END patient-body -->
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       LAYER TOGGLE PANEL (left side)
+       ═══════════════════════════════════════════════════════════════════ -->
+  <a-entity id="layer-panel" position="-2.2 1.6 -2.8" rotation="0 25 0">
+    <!-- Panel title -->
+    <a-text value="SYSTEM LAYERS" align="center" color="#00e5ff" width="1.6" position="0 0.6 0" font="mozillavr"></a-text>
+
+    <!-- Toggle: Nervous System -->
+    <a-entity class="btn" layer-toggle="layer: nerves" position="0 0.42 0">
+      <a-plane width="0.9" height="0.12" color="#ffeb3b" material="shader: flat; opacity: 0.9"></a-plane>
+      <a-text value="Nervous System" align="center" color="#1a1a2e" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- Toggle: Organs -->
+    <a-entity class="btn" layer-toggle="layer: organs" position="0 0.28 0">
+      <a-plane width="0.9" height="0.12" color="#4dd0e1" material="shader: flat; opacity: 0.9"></a-plane>
+      <a-text value="Organs" align="center" color="#1a1a2e" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- Toggle: Skeleton -->
+    <a-entity class="btn" layer-toggle="layer: skeleton" position="0 0.14 0">
+      <a-plane width="0.9" height="0.12" color="#b0bec5" material="shader: flat; opacity: 0.9"></a-plane>
+      <a-text value="Skeleton" align="center" color="#1a1a2e" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- Toggle: Muscles -->
+    <a-entity class="btn" layer-toggle="layer: muscles" position="0 0 0">
+      <a-plane width="0.9" height="0.12" color="#ef5350" material="shader: flat; opacity: 0.35"></a-plane>
+      <a-text value="Muscles" align="center" color="#ef5350" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- Toggle: Circulatory -->
+    <a-entity class="btn" layer-toggle="layer: circulatory" position="0 -0.14 0">
+      <a-plane width="0.9" height="0.12" color="#e53935" material="shader: flat; opacity: 0.35"></a-plane>
+      <a-text value="Circulatory" align="center" color="#e53935" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- Toggle: Skin -->
+    <a-entity class="btn" layer-toggle="layer: skin" position="0 -0.28 0">
+      <a-plane width="0.9" height="0.12" color="#ffcc80" material="shader: flat; opacity: 0.35"></a-plane>
+      <a-text value="Skin" align="center" color="#ffcc80" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+  </a-entity>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       VR DIAGNOSTIC REPORT PANEL (with tabs)
+       ═══════════════════════════════════════════════════════════════════ -->
+  <a-entity id="report-panel" visible="false" position="0 1.8 -1.5">
+
+    <!-- Main bg -->
+    <a-plane width="2.8" height="2.4" color="#0a1628" material="opacity: 0.96; shader: flat"></a-plane>
+    <!-- Border -->
+    <a-plane width="2.84" height="2.44" color="#00838f" material="opacity: 0.35; shader: flat" position="0 0 -0.003"></a-plane>
+    <!-- Top accent -->
+    <a-plane width="2.8" height="0.03" color="#00e5ff" material="shader: flat" position="0 1.185 0.002"></a-plane>
+
+    <!-- Header -->
+    <a-entity id="rpt-title" position="0 1.06 0.005"></a-entity>
+    <a-entity id="rpt-patient" position="0 0.9 0.005"></a-entity>
+    <a-plane width="2.5" height="0.003" color="#1a3a5c" material="shader: flat" position="0 0.78 0.005"></a-plane>
+
+    <a-entity id="rpt-organ" position="0 0.68 0.005"></a-entity>
+    <a-entity id="rpt-site" position="0 0.57 0.005"></a-entity>
+    <a-plane width="2.5" height="0.003" color="#1a3a5c" material="shader: flat" position="0 0.48 0.005"></a-plane>
+
+    <a-entity id="rpt-disease" position="0 0.38 0.005"></a-entity>
+    <a-entity id="rpt-severity" position="0 0.27 0.005"></a-entity>
+    <a-plane width="2.5" height="0.003" color="#1a3a5c" material="shader: flat" position="0 0.18 0.005"></a-plane>
+
+    <!-- TABS -->
+    <a-entity id="tab-diagnostic" class="btn" tab-switch="tab: diagnostic" position="-0.5 0.1 0.005">
+      <a-plane width="0.7" height="0.1" color="#00838f" material="shader: flat; opacity: 0.9"></a-plane>
+      <a-text value="DIAGNOSTIC" align="center" color="#e0f7fa" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+    <a-entity id="tab-nerves" class="btn" tab-switch="tab: nerves" position="0.5 0.1 0.005">
+      <a-plane width="0.7" height="0.1" color="#1a2a3a" material="shader: flat; opacity: 0.9"></a-plane>
+      <a-text value="NERVE MAP" align="center" color="#ffeb3b" width="1.2" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- DIAGNOSTIC TAB CONTENT -->
+    <a-entity id="rpt-diag-content" visible="true">
+      <a-entity id="rpt-analysis-label" position="-1.2 -0.08 0.005"></a-entity>
+      <a-entity id="rpt-analysis" position="-1.2 -0.3 0.005"></a-entity>
+    </a-entity>
+
+    <!-- NERVE TAB CONTENT -->
+    <a-entity id="rpt-nerve-content" visible="false">
+      <a-text value="NERVE INNERVATION MAP:" color="#ffeb3b" align="left" width="2.2" position="-1.2 -0.08 0.005" font="mozillavr"></a-text>
+      <a-entity id="rpt-nerve-list" position="-1.2 -0.28 0.005"></a-entity>
+
+      <!-- Pagination buttons -->
+      <a-entity class="btn" nerve-page-nav="direction: -1" position="-0.3 -1.0 0.005">
+        <a-plane width="0.22" height="0.1" color="#1a3a5c" material="shader: flat; opacity: 0.8"></a-plane>
+        <a-text value="< Prev" align="center" color="#80cbc4" width="1.0" position="0 0 0.003" font="mozillavr"></a-text>
+      </a-entity>
+      <a-entity class="btn" nerve-page-nav="direction: 1" position="0.3 -1.0 0.005">
+        <a-plane width="0.22" height="0.1" color="#1a3a5c" material="shader: flat; opacity: 0.8"></a-plane>
+        <a-text value="Next >" align="center" color="#80cbc4" width="1.0" position="0 0 0.003" font="mozillavr"></a-text>
+      </a-entity>
+    </a-entity>
+
+    <!-- Close button -->
+    <a-entity position="1.22 1.06 0.01">
+      <a-plane class="btn" close-panel width="0.22" height="0.12" color="#b71c1c" material="shader: flat; opacity: 0.9"></a-plane>
+      <a-text value="[X]" align="center" color="#ffffff" width="1.4" position="0 0 0.003" font="mozillavr"></a-text>
+    </a-entity>
+
+    <!-- Footer -->
+    <a-text value="VR MedViz Suite v2.0 — Confidential Medical Record" align="center" color="#37474f" width="1.6" position="0 -1.12 0.005" font="mozillavr"></a-text>
+  </a-entity>
+  <!-- END report-panel -->
+
+  <!-- Orientation labels -->
+  <a-text value="ANTERIOR" align="center" color="#37474f" width="1.0" position="0 -0.2 -4.5" font="mozillavr" rotation="0 0 0"></a-text>
+  <a-text value="POSTERIOR" align="center" color="#37474f" width="1.0" position="0 -0.2 -1.5" font="mozillavr" rotation="0 180 0"></a-text>
+  <a-text value="SUPERIOR" align="center" color="#37474f" width="0.9" position="0 3.2 -3" font="mozillavr" look-at-camera></a-text>
+
+</a-scene>
+
+<script>
+  // Set patient info header
+  document.addEventListener('DOMContentLoaded', () => {
+    const h = document.querySelector('#hud-patient');
+    if (h) {
+      h.setAttribute('text', {
+        value: `Patient: ${PATIENT_DATA.patientName}  |  MRN: ${PATIENT_DATA.patientId}  |  Age: ${PATIENT_DATA.age}  |  Sex: ${PATIENT_DATA.sex}`,
+        color: '#78909c', align: 'center', width: 3.2, font: 'mozillavr', wrapCount: 75
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
